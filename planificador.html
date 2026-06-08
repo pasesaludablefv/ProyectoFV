@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Proyecto F&V · Planificador docente (Intervención) - Calendario Dinámico</title>
+  <title>Proyecto F&V · Calendario docente (Checklist integrado)</title>
   <style>
     * {
       margin: 0;
@@ -23,7 +23,6 @@
       margin: 0 auto;
     }
 
-    /* Header principal */
     .hero {
       background: linear-gradient(135deg, #1f5e3a, #2b7a4b);
       color: white;
@@ -35,14 +34,12 @@
     .hero h1 {
       font-size: 1.9rem;
       font-weight: 700;
-      letter-spacing: -0.3px;
       display: flex;
       align-items: center;
       gap: 12px;
       flex-wrap: wrap;
     }
     .hero p {
-      font-size: 1rem;
       margin-top: 10px;
       opacity: 0.9;
     }
@@ -53,10 +50,9 @@
       border-radius: 60px;
       font-size: 0.8rem;
       font-weight: 600;
-      display: inline-block;
     }
 
-    /* Panel de configuración de fecha */
+    /* Panel de fecha */
     .date-config {
       background: white;
       border-radius: 28px;
@@ -80,7 +76,6 @@
       border-radius: 40px;
       border: 1px solid #c2dbc2;
       font-size: 0.9rem;
-      background: #fefef7;
     }
     .date-config button {
       background: #2b7a4b;
@@ -90,11 +85,6 @@
       border-radius: 40px;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.2s;
-      margin-top: 6px;
-    }
-    .date-config button:hover {
-      background: #1f5e3a;
     }
     .info-fechas {
       font-size: 0.75rem;
@@ -117,12 +107,11 @@
       min-width: 180px;
       border-radius: 28px;
       padding: 18px 16px;
-      box-shadow: 0 5px 12px rgba(0,0,0,0.05);
       border-left: 8px solid;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.05);
     }
     .card h3 {
       font-size: 1rem;
-      font-weight: 600;
       margin-bottom: 12px;
       color: #2c5e2e;
     }
@@ -133,8 +122,8 @@
       font-size: 0.85rem;
       margin-bottom: 6px;
       display: flex;
-      align-items: baseline;
       gap: 8px;
+      align-items: baseline;
     }
     .card li::before {
       content: "✅";
@@ -159,14 +148,12 @@
       border-radius: 40px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
       font-size: 0.9rem;
       color: #2a4b2a;
     }
     .month-btn.active {
       background: #2b7a4b;
       color: white;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
     }
     .calendar-grid {
       background: white;
@@ -191,23 +178,24 @@
       background: white;
     }
     .day-cell {
-      min-height: 120px;
+      min-height: 140px;
       border: 1px solid #e2f0e0;
       padding: 8px 6px;
       font-size: 0.8rem;
-      vertical-align: top;
       background: #fffdf9;
-      transition: background 0.1s;
+      transition: 0.05s;
+      display: flex;
+      flex-direction: column;
     }
     .day-number {
       font-weight: 700;
       font-size: 1rem;
-      display: inline-block;
       background: #eef3e8;
       width: 28px;
       height: 28px;
-      text-align: center;
-      line-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 30px;
       margin-bottom: 8px;
     }
@@ -232,30 +220,48 @@
     }
     .phase-tag {
       font-size: 0.65rem;
-      text-transform: uppercase;
       background: #d4e2d0;
       display: inline-block;
       padding: 2px 6px;
       border-radius: 20px;
       margin-top: 5px;
+      width: fit-content;
     }
-    .weekly-checklist {
-      margin-top: 32px;
+    .friday-check {
+      margin-top: 8px;
+      background: #fef9e6;
+      border-radius: 16px;
+      padding: 5px 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.7rem;
+      border: 1px solid #f1e2b5;
+    }
+    .friday-check input {
+      width: 16px;
+      height: 16px;
+      accent-color: #f4b942;
+      cursor: pointer;
+    }
+    .friday-check label {
+      font-weight: 500;
+      cursor: pointer;
+    }
+    .daily-task-list {
+      margin-top: 20px;
       background: #fefdf6;
-      border-radius: 32px;
+      border-radius: 28px;
       padding: 20px;
-      box-shadow: 0 5px 12px rgba(0,0,0,0.05);
     }
-    .weekly-checklist h3 {
-      font-size: 1.3rem;
-      margin-bottom: 8px;
-      color: #2f6b3a;
+    .daily-task-list h3 {
+      font-size: 1.2rem;
+      margin-bottom: 12px;
     }
     .checklist-grid {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 12px;
     }
     .check-item {
       background: white;
@@ -267,33 +273,6 @@
       align-items: center;
       gap: 8px;
     }
-    .check-item input {
-      width: 18px;
-      height: 18px;
-      accent-color: #2b7a4b;
-    }
-    .friday-checklist {
-      background: #fff6e5;
-      border-left: 5px solid #f4b942;
-      margin-top: 20px;
-      padding: 16px;
-      border-radius: 24px;
-    }
-    .friday-checklist h4 {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-    .friday-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin: 8px 0;
-      flex-wrap: wrap;
-      border-bottom: 1px dashed #e9e2c7;
-      padding: 6px 0;
-    }
     footer {
       text-align: center;
       margin-top: 40px;
@@ -301,139 +280,91 @@
       color: #5a6e55;
     }
     @media (max-width: 700px) {
-      .day-cell { min-height: 100px; padding: 4px; }
+      .day-cell { min-height: 120px; }
     }
   </style>
 </head>
 <body>
 <div class="container">
   <div class="hero">
-    <h1>🥗 Proyecto F&V · CLN0001 <span class="badge-period">Docente · Grupo Intervención</span></h1>
-    <p>📅 Planeación semanal · Calendario DINÁMICO (6 meses: 12 semanas activas + seguimiento pasivo)</p>
-    <p>✅ <strong>Tu rol:</strong> Puesto Saludable, Cartulina Global, tickets, stickers y acompañamiento.</p>
+    <h1>🥗 Proyecto F&V · CLN0001 <span class="badge-period">Docente intervención</span></h1>
+    <p>📅 Calendario dinámico con checklist integrado (viernes de cada semana activa). Las actividades diarias se muestran automáticamente.</p>
   </div>
 
-  <!-- CONFIGURACIÓN DE FECHA DE INICIO (Semana 0) -->
   <div class="date-config">
     <div>
-      <label>📅 Fecha de inicio del proyecto (Semana 0 - Línea base):</label>
+      <label>📅 Fecha de inicio (Semana 0 - Línea base):</label>
       <input type="date" id="startDateInput" value="2025-09-01">
-      <div class="info-fechas" style="margin-top: 6px;">* Luego del cambio, todo el calendario y los viernes se reordenan automáticamente.</div>
+      <div class="info-fechas">* Al cambiar la fecha, el calendario y los checklists se reordenan.</div>
     </div>
     <div>
-      <button id="applyStartDate">🗓️ Aplicar fecha y reorganizar</button>
+      <button id="applyStartDate">🗓️ Actualizar calendario</button>
     </div>
   </div>
 
   <div class="summary-cards">
-    <div class="card" style="border-left-color: #e67e22;">
-      <h3>🍎 Intervención activa</h3>
-      <ul><li>Semanas 1 a 12</li><li>Puesto Saludable diario</li><li>Entrega de tickets y sellos</li><li>Stickers semanales + talleres</li></ul>
-    </div>
-    <div class="card" style="border-left-color: #2b7a4b;">
-      <h3>📈 Seguimiento pasivo</h3>
-      <ul><li>Semanas 13 a 23</li><li>Sin actividades diarias</li><li>Solo apoyar medición final (semana 24)</li></ul>
-    </div>
-    <div class="card" style="border-left-color: #f4b942;">
-      <h3>📅 Fechas clave</h3>
-      <ul><li>Semana 0: Línea base</li><li>Talleres: semanas 4, 8 y 12</li><li>Semana 12: Post + Celebración</li><li>Semana 24: Cuestionario final</li></ul>
-    </div>
+    <div class="card" style="border-left-color:#e67e22;"><h3>🍎 Intervención activa</h3><ul><li>Semanas 1 a 12</li><li>Puesto diario + tickets</li><li>Stickers semanales</li></ul></div>
+    <div class="card" style="border-left-color:#2b7a4b;"><h3>📈 Seguimiento pasivo</h3><ul><li>Semanas 13 a 23</li><li>Sin actividades diarias</li><li>Solo apoyar medición final</li></ul></div>
+    <div class="card" style="border-left-color:#f4b942;"><h3>📅 Fechas clave</h3><ul><li>Talleres: semanas 4,8,12</li><li>Semana 12: Post + Celebración</li><li>Semana 24: Cuestionario final</li></ul></div>
   </div>
 
   <div class="month-nav" id="monthNav"></div>
   <div class="calendar-grid" id="calendarGrid"></div>
 
-  <!-- CHECKLIST GENERAL + VIERNES (semanal) -->
-  <div class="weekly-checklist">
-    <h3>📋 Checklist del docente (actividades permanentes)</h3>
+  <!-- Tareas permanentes (imprimible) -->
+  <div class="daily-task-list">
+    <h3>📋 Tareas clave del docente (actividades diarias/semanales)</h3>
     <div class="checklist-grid" id="generalChecklist"></div>
-    
-    <div class="friday-checklist" id="fridayChecklistContainer">
-      <h4>⭐ VIERNES: registro de cumplimiento semanal (Intervención activa)</h4>
-      <div id="fridayList"></div>
-      <p style="font-size:0.7rem; margin-top: 10px;">✔ Marca cada viernes que hayas completado los 5 días de Puesto Saludable y entrega de stickers secretos. Esto te servirá como recordatorio semanal.</p>
-    </div>
-    <p style="margin-top: 12px; font-size: 0.75rem; background: #f3f9f0; padding: 8px; border-radius: 24px;">📌 Durante el seguimiento pasivo (semanas 13–23) no hay checklist de viernes. Solo apoyar medición final (semana 24).</p>
+    <p style="margin-top: 12px; font-size: 0.75rem; background:#f3f9f0; padding: 8px; border-radius: 24px;">📌 Los checklists de los <strong>viernes</strong> están integrados directamente en el calendario (dentro de cada celda del día viernes). Puedes marcar tu cumplimiento semanal justo ahí.</p>
   </div>
-  <footer>🧑‍🏫 Flujograma operativo · Fechas dinámicas: al cambiar el inicio todo el calendario se recalcula automáticamente.</footer>
+  <footer>🧑‍🏫 Al cambiar la fecha de inicio, el calendario recalcula automáticamente todas las actividades y los viernes de intervención.</footer>
 </div>
 
 <script>
-  // Variables globales
-  let projectStart = new Date(2025, 8, 1); // por defecto 1 sep 2025
+  // ---------- FUNCIONES BASE ----------
+  let projectStart = new Date(2025, 8, 1);
   let currentMonthIndex = 0;
   const monthNames = ["Septiembre", "Octubre", "Noviembre", "Diciembre", "Enero", "Febrero"];
-  
-  // Función para generar semanas y eventos basados en projectStart
-  function getEvents(projStart) {
-    const events = [];
-    // Semana 0 (línea base) primeros 5 días
-    const week0Start = new Date(projStart);
-    const week0End = new Date(projStart);
-    week0End.setDate(week0End.getDate() + 4);
-    events.push({
-      dateStart: week0Start,
-      dateEnd: week0End,
-      title: "📋 SEMANA 0 · Línea base",
-      desc: "Colocar Cartulina Global, explicar Puesto Saludable, apoyar cuestionario inicial.",
-      type: "important"
-    });
-    // Talleres semanas 4, 8, 12
-    [4,8,12].forEach(weekNum => {
-      const start = addDays(projStart, (weekNum-1)*7);
-      const end = addDays(start, 1);
-      events.push({
-        dateStart: start,
-        dateEnd: end,
-        title: `🎉 Taller presencial (semana ${weekNum})`,
-        desc: `Apoyar logística, entregar stickers extra. Semana ${weekNum} de intervención.`,
-        type: "workshop"
-      });
-    });
-    // Semana 12 post + celebración
-    const postStart = addDays(projStart, 11*7);
-    events.push({
-      dateStart: postStart,
-      dateEnd: addDays(postStart, 2),
-      title: "🎓 SEMANA 12 · Post + Celebración Vitamina Culichi",
-      desc: "Cuestionario de salida, celebración, últimos stickers.",
-      type: "celebration"
-    });
-    // Seguimiento pasivo semanas 13 a 23
-    const passiveStart = addDays(projStart, 12*7);
-    const passiveEnd = addDays(projStart, 23*7);
-    events.push({
-      dateStart: passiveStart,
-      dateEnd: passiveEnd,
-      title: "⏸️ Seguimiento pasivo (semanas 13-23)",
-      desc: "Sin Puesto Saludable diario. Solo coordinar medición final.",
-      type: "passive"
-    });
-    // Semana 24 final
-    const finalStart = addDays(projStart, 24*7);
-    events.push({
-      dateStart: finalStart,
-      dateEnd: addDays(finalStart, 2),
-      title: "📝 SEMANA 24 · Seguimiento final",
-      desc: "Cuestionario final, acceso a cómputo, cierre del estudio.",
-      type: "final"
-    });
-    return events;
-  }
-  
+
   function addDays(date, days) {
     const res = new Date(date);
     res.setDate(res.getDate() + days);
     return res;
   }
-  
+
   function getWeekNumber(date, startRef) {
     const diffDays = Math.floor((date - startRef) / (1000 * 60 * 60 * 24));
     if (diffDays < 0) return -1;
     if (diffDays < 7) return 0;
     return Math.floor(diffDays / 7) + 1;
   }
-  
+
+  // Generar eventos dinámicos según projectStart
+  function getEvents(startDate) {
+    const events = [];
+    // Semana 0
+    const week0Start = new Date(startDate);
+    const week0End = addDays(week0Start, 4);
+    events.push({ dateStart: week0Start, dateEnd: week0End, title: "📋 SEMANA 0 · Línea base", desc: "Colocar Cartulina, explicar Puesto Saludable, apoyar cuestionario.", type: "important" });
+    // Talleres semanas 4,8,12
+    [4,8,12].forEach(weekNum => {
+      const start = addDays(startDate, (weekNum-1)*7);
+      events.push({ dateStart: start, dateEnd: addDays(start, 1), title: `🎉 Taller semana ${weekNum}`, desc: "Apoyar logística, stickers extra.", type: "workshop" });
+    });
+    // Semana 12 post + celebración
+    const postStart = addDays(startDate, 11*7);
+    events.push({ dateStart: postStart, dateEnd: addDays(postStart, 2), title: "🎓 SEMANA 12 · Post + Celebración", desc: "Cuestionario de salida, celebración, últimos stickers.", type: "celebration" });
+    // Seguimiento pasivo
+    const passiveStart = addDays(startDate, 12*7);
+    const passiveEnd = addDays(startDate, 23*7);
+    events.push({ dateStart: passiveStart, dateEnd: passiveEnd, title: "⏸️ Seguimiento pasivo (semanas 13-23)", desc: "Sin Puesto Saludable diario. Solo coordinar medición final.", type: "passive" });
+    // Semana 24 final
+    const finalStart = addDays(startDate, 24*7);
+    events.push({ dateStart: finalStart, dateEnd: addDays(finalStart, 2), title: "📝 SEMANA 24 · Seguimiento final", desc: "Cuestionario final, cierre.", type: "final" });
+    return events;
+  }
+
+  // Obtener eventos de un día, incluyendo el badge de viernes si aplica
   function getEventsForDate(date, events, startRef) {
     const result = [];
     for (let ev of events) {
@@ -442,56 +373,58 @@
     const weekNum = getWeekNumber(date, startRef);
     if (weekNum >= 1 && weekNum <= 12 && !result.some(e => e.type === "passive")) {
       if (!result.some(e => e.title.includes("Puesto"))) {
-        result.push({
-          title: "🥕 Puesto Saludable (diario)",
-          desc: "Antes del receso: recibir fruta/verdura, ticket, sellar Cartulina.",
-          type: "daily"
-        });
+        result.push({ title: "🥕 Puesto Saludable (diario)", desc: "Recibir fruta/verdura, ticket, sellar Cartulina.", type: "daily" });
       }
     }
     return result;
   }
-  
-  // Generar meses desde projectStart (sept, oct, nov, dic, ene, feb)
-  function getMonthsToShow(startDate) {
-    const year = startDate.getFullYear();
-    const month = startDate.getMonth(); // septiembre
-    return [
-      { year: year, month: month },      // sept
-      { year: year, month: month+1 },    // oct
-      { year: year, month: month+2 },    // nov
-      { year: year, month: month+3 },    // dic
-      { year: year, month: month+4 },    // ene
-      { year: year, month: month+5 }     // feb
-    ];
+
+  // Determinar si un día es viernes de intervención (semana 1 a 12) y además es el viernes de esa semana
+  function isInterventionFriday(date, startRef) {
+    const weekNum = getWeekNumber(date, startRef);
+    if (weekNum < 1 || weekNum > 12) return false;
+    const dayOfWeek = date.getDay(); // 0 domingo, 5 viernes
+    if (dayOfWeek !== 5) return false;
+    // Validar que sea el viernes correspondiente a la semana de intervención
+    // Evitamos falsos positivos de viernes fuera del rango
+    const firstMonday = addDays(startRef, 7); // inicio semana 1
+    for (let w = 1; w <= 12; w++) {
+      const fridayOfWeek = addDays(firstMonday, (w-1)*7 + 4);
+      if (date.toDateString() === fridayOfWeek.toDateString()) return true;
+    }
+    return false;
   }
-  
-  let currentMonthsList = [];
-  let currentEvents = [];
-  
+
+  // Obtener número de semana de intervención (1-12) para el viernes
+  function getFridayWeekNumber(date, startRef) {
+    const weekNum = getWeekNumber(date, startRef);
+    if (weekNum >= 1 && weekNum <= 12 && date.getDay() === 5) return weekNum;
+    return null;
+  }
+
+  // Render del calendario con checkboxes integrados en los viernes
   function renderCalendar(monthIdx, startDate, eventsList) {
     const months = getMonthsToShow(startDate);
     if (monthIdx >= months.length) monthIdx = 0;
     const { year, month } = months[monthIdx];
     const firstDayOfMonth = new Date(year, month, 1);
-    let startOfWeekOffset = firstDayOfMonth.getDay(); // 0 domingo
+    let startOfWeekOffset = firstDayOfMonth.getDay();
     let startOffset = startOfWeekOffset === 0 ? 6 : startOfWeekOffset - 1;
     const daysInMonth = new Date(year, month+1, 0).getDate();
     const calendarDays = [];
     for (let i = startOffset; i > 0; i--) {
-      const prevDate = new Date(year, month, -i+1);
-      calendarDays.push({ date: prevDate, currentMonth: false });
+      calendarDays.push({ date: new Date(year, month, -i+1), currentMonth: false });
     }
     for (let d=1; d<=daysInMonth; d++) {
       calendarDays.push({ date: new Date(year, month, d), currentMonth: true });
     }
     const totalCells = Math.ceil(calendarDays.length/7)*7;
     while(calendarDays.length < totalCells) {
-      const nextDate = new Date(year, month, calendarDays.length - daysInMonth + 1);
-      calendarDays.push({ date: nextDate, currentMonth: false });
+      calendarDays.push({ date: new Date(year, month, calendarDays.length - daysInMonth + 1), currentMonth: false });
     }
-    
+
     let html = `<div class="calendar-header"><div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div><div>Dom</div></div><div class="calendar-days">`;
+    
     for (let day of calendarDays) {
       const dateObj = day.date;
       const weekNum = getWeekNumber(dateObj, startDate);
@@ -502,29 +435,56 @@
         if (ev.type === "workshop") cls += " event-warning";
         if (ev.type === "celebration" || ev.type === "final") cls += " event-success";
         if (ev.type === "passive") cls += " event-warning";
-        eventsHtml += `<div class="${cls}" title="${ev.desc}">${ev.title.length > 35 ? ev.title.substring(0,32)+"…" : ev.title}</div>`;
+        eventsHtml += `<div class="${cls}" title="${ev.desc}">${ev.title.length > 32 ? ev.title.substring(0,30)+"…" : ev.title}</div>`;
       });
+      
+      // Badge de cuestionario inicial semana 0
       if (weekNum === 0 && day.currentMonth && dateObj.getDate() <= 5) {
         eventsHtml += `<div class="event-badge event-warning">📋 Cuestionario inicial</div>`;
       }
-      let weekBadge = "";
+      
+      // Indicadores de taller / celebración
       if ((weekNum === 4 || weekNum === 8 || weekNum === 12) && dayEvents.some(e=>e.type==="workshop"))
-        weekBadge = `<div class="phase-tag">Taller semana ${weekNum}</div>`;
+        eventsHtml += `<div class="phase-tag">🎉 Taller semana ${weekNum}</div>`;
       else if (weekNum === 12 && dayEvents.some(e=>e.type==="celebration"))
-        weekBadge = `<div class="phase-tag">🎉 Celebración</div>`;
+        eventsHtml += `<div class="phase-tag">🎊 Celebración</div>`;
       else if (weekNum === 24 && day.currentMonth)
-        weekBadge = `<div class="phase-tag">🔚 Cuestionario final</div>`;
+        eventsHtml += `<div class="phase-tag">🔚 Cuestionario final</div>`;
       else if (weekNum === 13 && day.currentMonth)
-        weekBadge = `<div class="phase-tag">⏸️ Inicio seguimiento pasivo</div>`;
+        eventsHtml += `<div class="phase-tag">⏸️ Inicio seguimiento pasivo</div>`;
+      
+      // === CHECKLIST VIERNES INTEGRADO ===
+      let fridayCheckHtml = "";
+      if (isInterventionFriday(dateObj, startDate) && day.currentMonth) {
+        const weekNumber = getFridayWeekNumber(dateObj, startDate);
+        if (weekNumber) {
+          const checkboxId = `fri_${weekNumber}_${dateObj.toISOString().slice(0,10)}`;
+          // almacenar estado en localStorage para persistencia opcional
+          let isChecked = localStorage.getItem(checkboxId) === 'true';
+          fridayCheckHtml = `
+            <div class="friday-check">
+              <input type="checkbox" id="${checkboxId}" data-week="${weekNumber}" data-date="${dateObj.toISOString()}" ${isChecked ? 'checked' : ''}>
+              <label for="${checkboxId}">⭐ Marcar cumplimiento semana ${weekNumber}: 5 días de Puesto + Sticker Secreto entregado</label>
+            </div>
+          `;
+        }
+      }
       
       html += `<div class="day-cell" style="${!day.currentMonth ? 'background:#fafbf8; color:#aaa;' : ''}">
         <div class="day-number">${dateObj.getDate()}</div>
-        ${weekBadge}
         ${eventsHtml}
+        ${fridayCheckHtml}
       </div>`;
     }
     html += `</div>`;
     document.getElementById("calendarGrid").innerHTML = html;
+    
+    // Vincular eventos de cambio a los checkboxes recién creados
+    document.querySelectorAll('.friday-check input[type="checkbox"]').forEach(cb => {
+      cb.addEventListener('change', (e) => {
+        localStorage.setItem(e.target.id, e.target.checked);
+      });
+    });
     
     // Resaltar botón activo
     document.querySelectorAll(".month-btn").forEach((btn, idx) => {
@@ -532,7 +492,16 @@
       else btn.classList.remove("active");
     });
   }
-  
+
+  function getMonthsToShow(startDate) {
+    const year = startDate.getFullYear();
+    const month = startDate.getMonth();
+    return [
+      { year, month }, { year, month: month+1 }, { year, month: month+2 },
+      { year, month: month+3 }, { year, month: month+4 }, { year, month: month+5 }
+    ];
+  }
+
   function buildMonthNav(startDate) {
     const months = getMonthsToShow(startDate);
     const nav = document.getElementById("monthNav");
@@ -544,7 +513,7 @@
       if (idx === currentMonthIndex) btn.classList.add("active");
       btn.addEventListener("click", () => {
         currentMonthIndex = idx;
-        renderCalendar(currentMonthIndex, startDate, getEvents(startDate));
+        renderCalendar(currentMonthIndex, projectStart, getEvents(projectStart));
       });
       nav.appendChild(btn);
     });
@@ -553,13 +522,12 @@
   function buildGeneralChecklist() {
     const container = document.getElementById("generalChecklist");
     const tasks = [
-      "✅ Recibir a niños con fruta/verdura antes del receso",
-      "🎫 Entregar Ticket Escolar por porción (tamaño puño)",
-      "📌 Sellar la Cartulina Global en el espacio del niño",
+      "✅ Puesto Saludable diario (recibir fruta/verdura, entregar ticket)",
+      "📌 Sellar Cartulina Global por cada niño que cumpla",
       "📒 Recordar pegar ticket en Pasaporte y mostrar a adulto",
-      "🌟 Entregar Sticker Secreto (viernes) si cumplió 5 días",
-      "📢 Apoyar talleres (semanas 4, 8 y 12)",
-      "📝 Mantener comunicación con equipo investigador"
+      "🌟 Entregar Sticker Secreto los viernes (5 días de consumo)",
+      "🎉 Apoyar talleres en semanas 4, 8 y 12 (logística, stickers extra)",
+      "📞 Mantener comunicación con equipo investigador"
     ];
     container.innerHTML = "";
     tasks.forEach(task => {
@@ -570,62 +538,25 @@
       container.appendChild(div);
     });
   }
-  
-  // Construir checklist de viernes dinámicos según las semanas de intervención (semanas 1 a 12)
-  function buildFridayChecklist(startDate) {
-    const fridayContainer = document.getElementById("fridayList");
-    if (!fridayContainer) return;
-    fridayContainer.innerHTML = "";
-    // Generar los viernes de cada semana de intervención (semana 1 a semana 12)
-    // semana 1 empieza en startDate + 7 días, el viernes de esa semana sería startDate + 7 + (4 - díaSemana)
-    const firstMonday = new Date(startDate);
-    // Ajustar para que el primer lunes post semana 0: semana 1 empieza lunes siguiente a semana0
-    let weekStart = addDays(startDate, 7); // lunes semana 1
-    for (let w = 1; w <= 12; w++) {
-      // calcular viernes de esa semana (weekStart es lunes, sumamos 4 días)
-      const friday = addDays(weekStart, 4);
-      if (friday > new Date(2027,0,1)) break;
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      const fechaStr = friday.toLocaleDateString('es-ES', options);
-      const div = document.createElement("div");
-      div.className = "friday-item";
-      div.innerHTML = `
-        <input type="checkbox" id="fri_${w}" data-week="${w}">
-        <label for="fri_${w}"><strong>📅 Viernes semana ${w} (${fechaStr})</strong> — cumplimiento: 5 días de Puesto Saludable + entrega de Sticker Secreto.</label>
-      `;
-      fridayContainer.appendChild(div);
-      weekStart = addDays(weekStart, 7);
-    }
-    // Si no hay semanas de intervención por fechas (por si inicio es muy tarde) mostrar aviso
-    if (fridayContainer.children.length === 0) {
-      fridayContainer.innerHTML = "<p style='color:#b45309;'>⚠️ No hay semanas de intervención activa con el rango seleccionado. Verifica la fecha de inicio.</p>";
-    }
-  }
-  
+
   function fullUpdate(startDate) {
     projectStart = new Date(startDate);
-    currentMonthsList = getMonthsToShow(projectStart);
-    currentEvents = getEvents(projectStart);
     currentMonthIndex = 0;
     buildMonthNav(projectStart);
-    renderCalendar(0, projectStart, currentEvents);
-    buildFridayChecklist(projectStart);
+    renderCalendar(0, projectStart, getEvents(projectStart));
   }
   
-  // Eventos de UI
+  // Eventos iniciales
   document.getElementById("applyStartDate").addEventListener("click", () => {
     const newDateStr = document.getElementById("startDateInput").value;
     if (newDateStr) {
       const newDate = new Date(newDateStr);
       if (!isNaN(newDate.getTime())) {
         fullUpdate(newDate);
-      } else {
-        alert("Fecha no válida");
-      }
+      } else alert("Fecha no válida");
     }
   });
   
-  // Inicialización
   buildGeneralChecklist();
   const defaultStart = new Date(2025, 8, 1);
   document.getElementById("startDateInput").value = "2025-09-01";
