@@ -1,15 +1,66 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proyecto F&V · Herramientas</title>
     <style>
-        body { font-family: Arial; text-align: center; padding: 50px; background: #f0f7f0; }
-        a { display: inline-block; margin: 20px; padding: 15px 30px; background: #2b7a4b; color: white; text-decoration: none; border-radius: 40px; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+            padding: 50px 20px;
+            background: #f0f7f0;
+            margin: 0;
+        }
+        h1 {
+            color: #1f5e3a;
+            font-size: 2rem;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background: #2b7a4b;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .btn:hover {
+            background: #1f5e3a;
+            transform: scale(1.02);
+        }
+        .btn-mapa {
+            background: #1e4663;
+        }
+        .btn-mapa:hover {
+            background: #0f2f4a;
+        }
+        footer {
+            margin-top: 60px;
+            color: #5a6e55;
+            font-size: 0.8rem;
+        }
     </style>
 </head>
 <body>
     <h1>🥗 Proyecto F&V · CLN0001</h1>
-    <a href="https://github.io/pasesaludablefv/ProyectoFV/mapescolar.html">🗺️ Ver mapa de escuelas</a>
-    <a href="https://github.io/pasesaludablefv/ProyectoFV/planificador.html">📅 Planificador docente</a>
+    <p style="font-size: 1.1rem;">Selecciona la herramienta que necesitas:</p>
+    <div class="buttons">
+        <a href="mapescolar.html" class="btn btn-mapa">🗺️ Ver mapa de escuelas</a>
+        <a href="planificador.html" class="btn">📅 Planificador docente</a>
+    </div>
+    <footer>
+        🔗 Herramientas para el equipo de investigación y docentes participantes.
+    </footer>
 </body>
 </html>
