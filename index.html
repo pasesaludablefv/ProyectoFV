@@ -2,96 +2,73 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Proyecto F&V · CLN0001</title>
+    <title>Proyecto F&V · Herramientas</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background: #f0f7f0;
-            font-family: system-ui, 'Segoe UI', sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
+            text-align: center;
+            padding: 50px 20px;
+            margin: 0;
         }
-        .card {
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
             background: white;
-            max-width: 700px;
-            width: 100%;
             border-radius: 48px;
             padding: 40px 30px;
-            text-align: center;
-            box-shadow: 0 20px 35px rgba(0,0,0,0.1);
-            border: 1px solid #d9e8d6;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
         h1 {
             color: #1f5e3a;
-            font-size: 2.2rem;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            flex-wrap: wrap;
+            font-size: 2rem;
+            margin-bottom: 10px;
         }
-        .sub {
+        p {
             color: #3b6e47;
-            margin-bottom: 35px;
-            font-size: 1rem;
+            margin-bottom: 30px;
         }
-        .btn-group {
+        .buttons {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
             gap: 20px;
-            margin: 30px 0 20px;
+            flex-wrap: wrap;
         }
-        .btn {
+        a {
+            display: inline-block;
+            padding: 12px 28px;
             background: #2b7a4b;
             color: white;
             text-decoration: none;
-            padding: 14px 32px;
-            border-radius: 60px;
-            font-weight: 600;
+            border-radius: 40px;
+            font-weight: bold;
             transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 1rem;
-            border: none;
-            cursor: pointer;
         }
-        .btn-mapa {
+        a:first-child {
             background: #1e4663;
         }
-        .btn-mapa:hover { background: #0f2f4a; transform: scale(1.02);}
-        .btn:hover { background: #1f5e3a; transform: scale(1.02);}
-        footer {
-            margin-top: 35px;
-            font-size: 0.75rem;
-            color: #5a6e55;
-            border-top: 1px solid #e2f0e0;
-            padding-top: 20px;
+        a:hover {
+            transform: scale(1.02);
+            opacity: 0.9;
         }
-        @media (max-width: 500px) {
-            .card { padding: 30px 20px; }
-            .btn { padding: 10px 20px; font-size: 0.9rem; }
+        footer {
+            margin-top: 30px;
+            font-size: 0.75rem;
+            color: #888;
         }
     </style>
 </head>
 <body>
-<div class="card">
-    <h1>🥗 Proyecto F&V · CLN0001</h1>
-    <div class="sub">Herramientas para el equipo de investigación y docentes</div>
-    <div class="btn-group">
-        <a href="https://pasesaludablefv.github.io/ProyectoFV/mapa.html" class="btn btn-mapa">🗺️ Ver mapa de escuelas</a>
-        <a href="https://pasesaludablefv.github.io/ProyectoFV/planificador.html" class="btn">📅 Planificador docente</a>
+    <div class="container">
+        <h1>🥗 Proyecto F&V · CLN0001</h1>
+        <p>Selecciona la herramienta que necesitas:</p>
+        <div class="buttons">
+            <a href="mapaescolar.html">🗺️ Ver mapa de escuelas</a>
+            <a href="planificador.html">📅 Planificador docente</a>
+        </div>
+        <footer>
+            🔗 Herramientas para el equipo de investigación y docentes.
+        </footer>
     </div>
-    <footer>
-        🔗 Selecciona la herramienta que necesitas.<br>
-        Los enlaces funcionan directamente si los archivos <strong>mapa.html</strong> y <strong>planificador.html</strong> están en la misma carpeta.
-    </footer>
-</div>
 </body>
 </html>
