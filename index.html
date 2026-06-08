@@ -2,72 +2,139 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Proyecto F&V · Herramientas</title>
     <style>
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #f0f7f0;
-            text-align: center;
-            padding: 50px 20px;
+        * {
             margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: system-ui, 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+            background: #f0f7f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
         .container {
             max-width: 600px;
-            margin: 0 auto;
+            width: 100%;
             background: white;
             border-radius: 48px;
-            padding: 40px 30px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 32px 24px;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: all 0.2s;
         }
+
         h1 {
             color: #1f5e3a;
-            font-size: 2rem;
-            margin-bottom: 10px;
-        }
-        p {
-            color: #3b6e47;
-            margin-bottom: 30px;
-        }
-        .buttons {
+            font-size: clamp(1.6rem, 6vw, 2.2rem);
+            margin-bottom: 12px;
             display: flex;
+            align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 8px;
             flex-wrap: wrap;
         }
-        a {
-            display: inline-block;
-            padding: 12px 28px;
+
+        .sub {
+            color: #3b6e47;
+            font-size: clamp(0.85rem, 4vw, 1rem);
+            margin-bottom: 32px;
+            padding: 0 8px;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px 20px;
             background: #2b7a4b;
             color: white;
             text-decoration: none;
-            border-radius: 40px;
-            font-weight: bold;
-            transition: 0.2s;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: clamp(0.95rem, 4.5vw, 1.05rem);
+            transition: all 0.2s ease;
+            text-align: center;
+            border: none;
+            cursor: pointer;
         }
-        a:first-child {
+
+        .btn-mapa {
             background: #1e4663;
         }
-        a:hover {
+
+        .btn-mapa:hover {
+            background: #0f2f4a;
             transform: scale(1.02);
-            opacity: 0.9;
         }
+
+        .btn-planificador {
+            background: #2b7a4b;
+        }
+
+        .btn-planificador:hover {
+            background: #1f5e3a;
+            transform: scale(1.02);
+        }
+
         footer {
-            margin-top: 30px;
-            font-size: 0.75rem;
-            color: #888;
+            font-size: 0.7rem;
+            color: #5a6e55;
+            border-top: 1px solid #e2f0e0;
+            padding-top: 20px;
+            margin-top: 8px;
+        }
+
+        /* Para pantallas muy pequeñas */
+        @media (max-width: 480px) {
+            .container {
+                padding: 24px 16px;
+                border-radius: 32px;
+            }
+            .btn {
+                padding: 12px 16px;
+            }
+        }
+
+        /* Para tablets y pantallas grandes, se mantiene el ancho controlado */
+        @media (min-width: 768px) {
+            .buttons {
+                flex-direction: row;
+                justify-content: center;
+                gap: 20px;
+            }
+            .btn {
+                width: auto;
+                min-width: 220px;
+                padding: 14px 28px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>🥗 Proyecto F&V · CLN0001</h1>
-        <p>Selecciona la herramienta que necesitas:</p>
+        <div class="sub">Selecciona la herramienta que necesitas:</div>
         <div class="buttons">
-            <a href="mapaescolar.html">🗺️ Ver mapa de escuelas</a>
-            <a href="planificador.html">📅 Planificador docente</a>
+            <a href="mapaescolar.html" class="btn btn-mapa">🗺️ Ver mapa de escuelas</a>
+            <a href="planificador.html" class="btn btn-planificador">📅 Planificador docente</a>
         </div>
         <footer>
-            🔗 Herramientas para el equipo de investigación y docentes.
+            🔗 Herramientas para el equipo de investigación y docentes participantes.
         </footer>
     </div>
 </body>
