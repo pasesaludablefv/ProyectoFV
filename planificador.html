@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Proyecto F&V · Planificador docente (Intervención) - Calendario Dinámico</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+      background: #f0f7f0;
+      padding: 24px 16px;
+      color: #1e2a1f;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Header principal */
+    .hero {
+      background: linear-gradient(135deg, #1f5e3a, #2b7a4b);
+      color: white;
+      border-radius: 36px;
+      padding: 24px 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+    }
+    .hero h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .hero p {
+      font-size: 1rem;
+      margin-top: 10px;
+      opacity: 0.9;
+    }
+    .badge-period {
+      background: #ffd966;
+      color: #2d4a22;
+      padding: 5px 12px;
+      border-radius: 60px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    /* Panel de configuración de fecha */
+    .date-config {
+      background: white;
+      border-radius: 28px;
+      padding: 16px 24px;
+      margin-bottom: 28px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      border: 1px solid #d9e8d6;
+    }
+    .date-config label {
+      font-weight: 600;
+      color: #2c5e2e;
+      display: block;
+      margin-bottom: 6px;
+    }
+    .date-config input {
+      padding: 10px 14px;
+      border-radius: 40px;
+      border: 1px solid #c2dbc2;
+      font-size: 0.9rem;
+      background: #fefef7;
+    }
+    .date-config button {
+      background: #2b7a4b;
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-top: 6px;
+    }
+    .date-config button:hover {
+      background: #1f5e3a;
+    }
+    .info-fechas {
+      font-size: 0.75rem;
+      color: #4b6e3b;
+      background: #eef5ea;
+      padding: 6px 12px;
+      border-radius: 60px;
+      display: inline-block;
+    }
+
+    .summary-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .card {
+      background: white;
+      flex: 1;
+      min-width: 180px;
+      border-radius: 28px;
+      padding: 18px 16px;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.05);
+      border-left: 8px solid;
+    }
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #2c5e2e;
+    }
+    .card ul {
+      list-style: none;
+    }
+    .card li {
+      font-size: 0.85rem;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .card li::before {
+      content: "✅";
+      font-size: 0.75rem;
+    }
+
+    .month-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 24px;
+      background: #ffffffcc;
+      backdrop-filter: blur(4px);
+      padding: 12px;
+      border-radius: 60px;
+    }
+    .month-btn {
+      background: #e9f0e6;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+      color: #2a4b2a;
+    }
+    .month-btn.active {
+      background: #2b7a4b;
+      color: white;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    }
+    .calendar-grid {
+      background: white;
+      border-radius: 32px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+      overflow-x: auto;
+      padding: 6px;
+    }
+    .calendar-header {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      background: #eef3ea;
+      padding: 14px 0;
+      text-align: center;
+      font-weight: 700;
+      color: #2c5e2e;
+      border-radius: 28px 28px 0 0;
+    }
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      background: white;
+    }
+    .day-cell {
+      min-height: 120px;
+      border: 1px solid #e2f0e0;
+      padding: 8px 6px;
+      font-size: 0.8rem;
+      vertical-align: top;
+      background: #fffdf9;
+      transition: background 0.1s;
+    }
+    .day-number {
+      font-weight: 700;
+      font-size: 1rem;
+      display: inline-block;
+      background: #eef3e8;
+      width: 28px;
+      height: 28px;
+      text-align: center;
+      line-height: 28px;
+      border-radius: 30px;
+      margin-bottom: 8px;
+    }
+    .event-badge {
+      background: #fef5e0;
+      border-left: 4px solid #f4b942;
+      padding: 4px 6px;
+      margin-top: 5px;
+      font-size: 0.7rem;
+      border-radius: 12px;
+      font-weight: 500;
+      color: #7a5a1a;
+    }
+    .event-warning {
+      background: #ffe8e0;
+      border-left-color: #e67e22;
+    }
+    .event-success {
+      background: #e0f7e8;
+      border-left-color: #2b7a4b;
+      color: #1c4d2d;
+    }
+    .phase-tag {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      background: #d4e2d0;
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 20px;
+      margin-top: 5px;
+    }
+    .weekly-checklist {
+      margin-top: 32px;
+      background: #fefdf6;
+      border-radius: 32px;
+      padding: 20px;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.05);
+    }
+    .weekly-checklist h3 {
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+      color: #2f6b3a;
+    }
+    .checklist-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .check-item {
+      background: white;
+      border-radius: 48px;
+      padding: 8px 18px;
+      border: 1px solid #cde2cd;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .check-item input {
+      width: 18px;
+      height: 18px;
+      accent-color: #2b7a4b;
+    }
+    .friday-checklist {
+      background: #fff6e5;
+      border-left: 5px solid #f4b942;
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 24px;
+    }
+    .friday-checklist h4 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .friday-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 8px 0;
+      flex-wrap: wrap;
+      border-bottom: 1px dashed #e9e2c7;
+      padding: 6px 0;
+    }
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.75rem;
+      color: #5a6e55;
+    }
+    @media (max-width: 700px) {
+      .day-cell { min-height: 100px; padding: 4px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <h1>🥗 Proyecto F&V · CLN0001 <span class="badge-period">Docente · Grupo Intervención</span></h1>
+    <p>📅 Planeación semanal · Calendario DINÁMICO (6 meses: 12 semanas activas + seguimiento pasivo)</p>
+    <p>✅ <strong>Tu rol:</strong> Puesto Saludable, Cartulina Global, tickets, stickers y acompañamiento.</p>
+  </div>
+
+  <!-- CONFIGURACIÓN DE FECHA DE INICIO (Semana 0) -->
+  <div class="date-config">
+    <div>
+      <label>📅 Fecha de inicio del proyecto (Semana 0 - Línea base):</label>
+      <input type="date" id="startDateInput" value="2025-09-01">
+      <div class="info-fechas" style="margin-top: 6px;">* Luego del cambio, todo el calendario y los viernes se reordenan automáticamente.</div>
+    </div>
+    <div>
+      <button id="applyStartDate">🗓️ Aplicar fecha y reorganizar</button>
+    </div>
+  </div>
+
+  <div class="summary-cards">
+    <div class="card" style="border-left-color: #e67e22;">
+      <h3>🍎 Intervención activa</h3>
+      <ul><li>Semanas 1 a 12</li><li>Puesto Saludable diario</li><li>Entrega de tickets y sellos</li><li>Stickers semanales + talleres</li></ul>
+    </div>
+    <div class="card" style="border-left-color: #2b7a4b;">
+      <h3>📈 Seguimiento pasivo</h3>
+      <ul><li>Semanas 13 a 23</li><li>Sin actividades diarias</li><li>Solo apoyar medición final (semana 24)</li></ul>
+    </div>
+    <div class="card" style="border-left-color: #f4b942;">
+      <h3>📅 Fechas clave</h3>
+      <ul><li>Semana 0: Línea base</li><li>Talleres: semanas 4, 8 y 12</li><li>Semana 12: Post + Celebración</li><li>Semana 24: Cuestionario final</li></ul>
+    </div>
+  </div>
+
+  <div class="month-nav" id="monthNav"></div>
+  <div class="calendar-grid" id="calendarGrid"></div>
+
+  <!-- CHECKLIST GENERAL + VIERNES (semanal) -->
+  <div class="weekly-checklist">
+    <h3>📋 Checklist del docente (actividades permanentes)</h3>
+    <div class="checklist-grid" id="generalChecklist"></div>
+    
+    <div class="friday-checklist" id="fridayChecklistContainer">
+      <h4>⭐ VIERNES: registro de cumplimiento semanal (Intervención activa)</h4>
+      <div id="fridayList"></div>
+      <p style="font-size:0.7rem; margin-top: 10px;">✔ Marca cada viernes que hayas completado los 5 días de Puesto Saludable y entrega de stickers secretos. Esto te servirá como recordatorio semanal.</p>
+    </div>
+    <p style="margin-top: 12px; font-size: 0.75rem; background: #f3f9f0; padding: 8px; border-radius: 24px;">📌 Durante el seguimiento pasivo (semanas 13–23) no hay checklist de viernes. Solo apoyar medición final (semana 24).</p>
+  </div>
+  <footer>🧑‍🏫 Flujograma operativo · Fechas dinámicas: al cambiar el inicio todo el calendario se recalcula automáticamente.</footer>
+</div>
+
+<script>
+  // Variables globales
+  let projectStart = new Date(2025, 8, 1); // por defecto 1 sep 2025
+  let currentMonthIndex = 0;
+  const monthNames = ["Septiembre", "Octubre", "Noviembre", "Diciembre", "Enero", "Febrero"];
+  
+  // Función para generar semanas y eventos basados en projectStart
+  function getEvents(projStart) {
+    const events = [];
+    // Semana 0 (línea base) primeros 5 días
+    const week0Start = new Date(projStart);
+    const week0End = new Date(projStart);
+    week0End.setDate(week0End.getDate() + 4);
+    events.push({
+      dateStart: week0Start,
+      dateEnd: week0End,
+      title: "📋 SEMANA 0 · Línea base",
+      desc: "Colocar Cartulina Global, explicar Puesto Saludable, apoyar cuestionario inicial.",
+      type: "important"
+    });
+    // Talleres semanas 4, 8, 12
+    [4,8,12].forEach(weekNum => {
+      const start = addDays(projStart, (weekNum-1)*7);
+      const end = addDays(start, 1);
+      events.push({
+        dateStart: start,
+        dateEnd: end,
+        title: `🎉 Taller presencial (semana ${weekNum})`,
+        desc: `Apoyar logística, entregar stickers extra. Semana ${weekNum} de intervención.`,
+        type: "workshop"
+      });
+    });
+    // Semana 12 post + celebración
+    const postStart = addDays(projStart, 11*7);
+    events.push({
+      dateStart: postStart,
+      dateEnd: addDays(postStart, 2),
+      title: "🎓 SEMANA 12 · Post + Celebración Vitamina Culichi",
+      desc: "Cuestionario de salida, celebración, últimos stickers.",
+      type: "celebration"
+    });
+    // Seguimiento pasivo semanas 13 a 23
+    const passiveStart = addDays(projStart, 12*7);
+    const passiveEnd = addDays(projStart, 23*7);
+    events.push({
+      dateStart: passiveStart,
+      dateEnd: passiveEnd,
+      title: "⏸️ Seguimiento pasivo (semanas 13-23)",
+      desc: "Sin Puesto Saludable diario. Solo coordinar medición final.",
+      type: "passive"
+    });
+    // Semana 24 final
+    const finalStart = addDays(projStart, 24*7);
+    events.push({
+      dateStart: finalStart,
+      dateEnd: addDays(finalStart, 2),
+      title: "📝 SEMANA 24 · Seguimiento final",
+      desc: "Cuestionario final, acceso a cómputo, cierre del estudio.",
+      type: "final"
+    });
+    return events;
+  }
+  
+  function addDays(date, days) {
+    const res = new Date(date);
+    res.setDate(res.getDate() + days);
+    return res;
+  }
+  
+  function getWeekNumber(date, startRef) {
+    const diffDays = Math.floor((date - startRef) / (1000 * 60 * 60 * 24));
+    if (diffDays < 0) return -1;
+    if (diffDays < 7) return 0;
+    return Math.floor(diffDays / 7) + 1;
+  }
+  
+  function getEventsForDate(date, events, startRef) {
+    const result = [];
+    for (let ev of events) {
+      if (date >= ev.dateStart && date <= ev.dateEnd) result.push(ev);
+    }
+    const weekNum = getWeekNumber(date, startRef);
+    if (weekNum >= 1 && weekNum <= 12 && !result.some(e => e.type === "passive")) {
+      if (!result.some(e => e.title.includes("Puesto"))) {
+        result.push({
+          title: "🥕 Puesto Saludable (diario)",
+          desc: "Antes del receso: recibir fruta/verdura, ticket, sellar Cartulina.",
+          type: "daily"
+        });
+      }
+    }
+    return result;
+  }
+  
+  // Generar meses desde projectStart (sept, oct, nov, dic, ene, feb)
+  function getMonthsToShow(startDate) {
+    const year = startDate.getFullYear();
+    const month = startDate.getMonth(); // septiembre
+    return [
+      { year: year, month: month },      // sept
+      { year: year, month: month+1 },    // oct
+      { year: year, month: month+2 },    // nov
+      { year: year, month: month+3 },    // dic
+      { year: year, month: month+4 },    // ene
+      { year: year, month: month+5 }     // feb
+    ];
+  }
+  
+  let currentMonthsList = [];
+  let currentEvents = [];
+  
+  function renderCalendar(monthIdx, startDate, eventsList) {
+    const months = getMonthsToShow(startDate);
+    if (monthIdx >= months.length) monthIdx = 0;
+    const { year, month } = months[monthIdx];
+    const firstDayOfMonth = new Date(year, month, 1);
+    let startOfWeekOffset = firstDayOfMonth.getDay(); // 0 domingo
+    let startOffset = startOfWeekOffset === 0 ? 6 : startOfWeekOffset - 1;
+    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const calendarDays = [];
+    for (let i = startOffset; i > 0; i--) {
+      const prevDate = new Date(year, month, -i+1);
+      calendarDays.push({ date: prevDate, currentMonth: false });
+    }
+    for (let d=1; d<=daysInMonth; d++) {
+      calendarDays.push({ date: new Date(year, month, d), currentMonth: true });
+    }
+    const totalCells = Math.ceil(calendarDays.length/7)*7;
+    while(calendarDays.length < totalCells) {
+      const nextDate = new Date(year, month, calendarDays.length - daysInMonth + 1);
+      calendarDays.push({ date: nextDate, currentMonth: false });
+    }
+    
+    let html = `<div class="calendar-header"><div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div><div>Dom</div></div><div class="calendar-days">`;
+    for (let day of calendarDays) {
+      const dateObj = day.date;
+      const weekNum = getWeekNumber(dateObj, startDate);
+      const dayEvents = getEventsForDate(dateObj, eventsList, startDate);
+      let eventsHtml = "";
+      dayEvents.forEach(ev => {
+        let cls = "event-badge";
+        if (ev.type === "workshop") cls += " event-warning";
+        if (ev.type === "celebration" || ev.type === "final") cls += " event-success";
+        if (ev.type === "passive") cls += " event-warning";
+        eventsHtml += `<div class="${cls}" title="${ev.desc}">${ev.title.length > 35 ? ev.title.substring(0,32)+"…" : ev.title}</div>`;
+      });
+      if (weekNum === 0 && day.currentMonth && dateObj.getDate() <= 5) {
+        eventsHtml += `<div class="event-badge event-warning">📋 Cuestionario inicial</div>`;
+      }
+      let weekBadge = "";
+      if ((weekNum === 4 || weekNum === 8 || weekNum === 12) && dayEvents.some(e=>e.type==="workshop"))
+        weekBadge = `<div class="phase-tag">Taller semana ${weekNum}</div>`;
+      else if (weekNum === 12 && dayEvents.some(e=>e.type==="celebration"))
+        weekBadge = `<div class="phase-tag">🎉 Celebración</div>`;
+      else if (weekNum === 24 && day.currentMonth)
+        weekBadge = `<div class="phase-tag">🔚 Cuestionario final</div>`;
+      else if (weekNum === 13 && day.currentMonth)
+        weekBadge = `<div class="phase-tag">⏸️ Inicio seguimiento pasivo</div>`;
+      
+      html += `<div class="day-cell" style="${!day.currentMonth ? 'background:#fafbf8; color:#aaa;' : ''}">
+        <div class="day-number">${dateObj.getDate()}</div>
+        ${weekBadge}
+        ${eventsHtml}
+      </div>`;
+    }
+    html += `</div>`;
+    document.getElementById("calendarGrid").innerHTML = html;
+    
+    // Resaltar botón activo
+    document.querySelectorAll(".month-btn").forEach((btn, idx) => {
+      if (idx === monthIdx) btn.classList.add("active");
+      else btn.classList.remove("active");
+    });
+  }
+  
+  function buildMonthNav(startDate) {
+    const months = getMonthsToShow(startDate);
+    const nav = document.getElementById("monthNav");
+    nav.innerHTML = "";
+    months.forEach((m, idx) => {
+      const btn = document.createElement("button");
+      btn.textContent = monthNames[idx];
+      btn.classList.add("month-btn");
+      if (idx === currentMonthIndex) btn.classList.add("active");
+      btn.addEventListener("click", () => {
+        currentMonthIndex = idx;
+        renderCalendar(currentMonthIndex, startDate, getEvents(startDate));
+      });
+      nav.appendChild(btn);
+    });
+  }
+  
+  function buildGeneralChecklist() {
+    const container = document.getElementById("generalChecklist");
+    const tasks = [
+      "✅ Recibir a niños con fruta/verdura antes del receso",
+      "🎫 Entregar Ticket Escolar por porción (tamaño puño)",
+      "📌 Sellar la Cartulina Global en el espacio del niño",
+      "📒 Recordar pegar ticket en Pasaporte y mostrar a adulto",
+      "🌟 Entregar Sticker Secreto (viernes) si cumplió 5 días",
+      "📢 Apoyar talleres (semanas 4, 8 y 12)",
+      "📝 Mantener comunicación con equipo investigador"
+    ];
+    container.innerHTML = "";
+    tasks.forEach(task => {
+      const div = document.createElement("div");
+      div.className = "check-item";
+      const id = "gen_"+task.replace(/[^a-z0-9]/gi,'');
+      div.innerHTML = `<input type="checkbox" id="${id}"> <label for="${id}">${task}</label>`;
+      container.appendChild(div);
+    });
+  }
+  
+  // Construir checklist de viernes dinámicos según las semanas de intervención (semanas 1 a 12)
+  function buildFridayChecklist(startDate) {
+    const fridayContainer = document.getElementById("fridayList");
+    if (!fridayContainer) return;
+    fridayContainer.innerHTML = "";
+    // Generar los viernes de cada semana de intervención (semana 1 a semana 12)
+    // semana 1 empieza en startDate + 7 días, el viernes de esa semana sería startDate + 7 + (4 - díaSemana)
+    const firstMonday = new Date(startDate);
+    // Ajustar para que el primer lunes post semana 0: semana 1 empieza lunes siguiente a semana0
+    let weekStart = addDays(startDate, 7); // lunes semana 1
+    for (let w = 1; w <= 12; w++) {
+      // calcular viernes de esa semana (weekStart es lunes, sumamos 4 días)
+      const friday = addDays(weekStart, 4);
+      if (friday > new Date(2027,0,1)) break;
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      const fechaStr = friday.toLocaleDateString('es-ES', options);
+      const div = document.createElement("div");
+      div.className = "friday-item";
+      div.innerHTML = `
+        <input type="checkbox" id="fri_${w}" data-week="${w}">
+        <label for="fri_${w}"><strong>📅 Viernes semana ${w} (${fechaStr})</strong> — cumplimiento: 5 días de Puesto Saludable + entrega de Sticker Secreto.</label>
+      `;
+      fridayContainer.appendChild(div);
+      weekStart = addDays(weekStart, 7);
+    }
+    // Si no hay semanas de intervención por fechas (por si inicio es muy tarde) mostrar aviso
+    if (fridayContainer.children.length === 0) {
+      fridayContainer.innerHTML = "<p style='color:#b45309;'>⚠️ No hay semanas de intervención activa con el rango seleccionado. Verifica la fecha de inicio.</p>";
+    }
+  }
+  
+  function fullUpdate(startDate) {
+    projectStart = new Date(startDate);
+    currentMonthsList = getMonthsToShow(projectStart);
+    currentEvents = getEvents(projectStart);
+    currentMonthIndex = 0;
+    buildMonthNav(projectStart);
+    renderCalendar(0, projectStart, currentEvents);
+    buildFridayChecklist(projectStart);
+  }
+  
+  // Eventos de UI
+  document.getElementById("applyStartDate").addEventListener("click", () => {
+    const newDateStr = document.getElementById("startDateInput").value;
+    if (newDateStr) {
+      const newDate = new Date(newDateStr);
+      if (!isNaN(newDate.getTime())) {
+        fullUpdate(newDate);
+      } else {
+        alert("Fecha no válida");
+      }
+    }
+  });
+  
+  // Inicialización
+  buildGeneralChecklist();
+  const defaultStart = new Date(2025, 8, 1);
+  document.getElementById("startDateInput").value = "2025-09-01";
+  fullUpdate(defaultStart);
+</script>
+</body>
+</html>
