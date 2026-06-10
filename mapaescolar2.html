@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Sector 12 - Culiacán | Mapa completo con UAS Nutrición (logística)</title>
+    <!-- Leaflet CSS + JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: system-ui, 'Segoe UI', 'Roboto', sans-serif;
+            background: #eef2f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: #0b2b3b;
+            color: white;
+            padding: 20px 30px;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        .header p {
+            opacity: 0.85;
+            margin-top: 8px;
+        }
+        .map-wrapper {
+            height: 550px;
+            width: 100%;
+            border-bottom: 1px solid #cfdee9;
+        }
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        .info-panel {
+            padding: 20px 25px;
+            background: #fefcf5;
+        }
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 10px 18px;
+            border-radius: 60px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+        }
+        .school-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+        .school-table th, .school-table td {
+            padding: 10px 8px;
+            text-align: left;
+            border-bottom: 1px solid #e9edf2;
+        }
+        .school-table th {
+            background: #eef3fa;
+            font-weight: 700;
+            color: #1e4663;
+        }
+        .badge {
+            padding: 3px 10px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .alta { background: #d1fae5; color: #065f46; }
+        .media { background: #fef9c3; color: #854d0e; }
+        .baja { background: #fee2e2; color: #991b1b; }
+        .privada { background: #e0e7ff; color: #1e3a8a; }
+        .estrato-bajo { background: #fee2e2; color: #b91c1c; padding: 3px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .estrato-medio-bajo { background: #fff3e3; color: #b45309; padding: 3px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .estrato-medio { background: #fef9c3; color: #854d0e; padding: 3px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .estrato-alto { background: #d1fae5; color: #065f46; padding: 3px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
+        .dist-note {
+            font-size: 0.7rem;
+            color: #4b5563;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px dashed #cbd5e1;
+        }
+        .comment-section {
+            margin-top: 20px;
+            background: #fef9e6;
+            border-left: 5px solid #f4b942;
+            padding: 12px 18px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #7a5a1a;
+        }
+        footer {
+            background: #eef2f7;
+            text-align: center;
+            font-size: 0.7rem;
+            padding: 12px;
+            color: #2c4e6e;
+        }
+        @media (max-width: 750px) {
+            .legend { gap: 12px; }
+            .school-table { font-size: 0.7rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📍 Sector 12 · Culiacán | Todas las escuelas primarias</h1>
+        <p>Análisis completo de idoneidad para proyecto de intervención nutricional. La UAS Nutrición se muestra como punto de partida logístico (no como riesgo de contaminación).</p>
+    </div>
+    <div class="map-wrapper">
+        <div id="map"></div>
+    </div>
+    <div class="info-panel">
+        <div class="legend">
+            <div class="legend-item"><div class="legend-color" style="background:#d32f2f;"></div><span>🔴 Idóneas (públicas, matrícula ≥40, estrato bajo-medio, distancia ≥3km)</span></div>
+            <div class="legend-item"><div class="legend-color" style="background:#f57c00;"></div><span>🟠 Medianamente idóneas (públicas, matrícula media, distancia moderada)</span></div>
+            <div class="legend-item"><div class="legend-color" style="background:#ffb74d;"></div><span>🟡 Poco idóneas (matrícula baja o muy cerca del centro)</span></div>
+            <div class="legend-item"><div class="legend-color" style="background:#1976d2;"></div><span>🔵 Privadas (solo referencia)</span></div>
+            <div class="legend-item"><div class="legend-color" style="background:#2e7d32;"></div><span>🟢 UAS Nutrición (punto logístico)</span></div>
+        </div>
+        <table class="school-table">
+            <thead>
+                <tr><th>Escuela</th><th>Idoneidad</th><th>Alumnos 5°+6°</th><th>Grupos</th><th>Estrato económico</th><th>Distancia UAS</th><th>Comentario clave</th></tr>
+            </thead>
+            <tbody>
+                <tr style="background:#fff5f3;"><td><strong>🔴 GRAL. FRANCISCO VILLA (Zona 23)</strong></td><td><span class="badge alta">Alta</span></td><td>55-65</td><td>4</td><td><span class="estrato-medio-bajo">Medio-bajo</span></td><td>3.4 km</td><td>Matrícula ideal, estrato adecuado, distancia óptima</td></tr>
+                <tr style="background:#fff5f3;"><td><strong>🔴 GRAL. FRANCISCO VILLA (Zona 119)</strong></td><td><span class="badge alta">Alta</span></td><td>50-60</td><td>4</td><td><span class="estrato-bajo">Bajo</span></td><td>3.8 km</td><td>Perfecta para intervención, estrato bajo, buena logística</td></tr>
+                <tr style="background:#fff5f3;"><td><strong>🔴 LAZARO CARDENAS (Zona 43)</strong></td><td><span class="badge alta">Alta</span></td><td>48-56</td><td>4</td><td><span class="estrato-medio-bajo">Medio-bajo</span></td><td>4.0 km</td><td>Alumnos suficientes, alejada del centro, recomendada</td></tr>
+                <tr style="background:#fff5f3;"><td><strong>🔴 EMILIANO ZAPATA (Zona 43)</strong></td><td><span class="badge alta">Alta</span></td><td>42-50</td><td>4</td><td><span class="estrato-bajo">Bajo</span></td><td>3.6 km</td><td>Excelente candidata para grupo control o intervención</td></tr>
+                <tr style="background:#fff0e0;"><td><strong>🟠 BENITO JUAREZ (Centro)</strong></td><td><span class="badge media">Media</span></td><td>25-30</td><td>2</td><td><span class="estrato-medio">Medio</span></td><td>1.2 km</td><td>Cercanía → riesgo contaminación, matrícula baja</td></tr>
+                <tr style="background:#fff0e0;"><td><strong>🟠 JUSTO SIERRA (Centro)</strong></td><td><span class="badge media">Media</span></td><td>20-25</td><td>2</td><td><span class="estrato-medio">Medio</span></td><td>1.0 km</td><td>Muy cerca del centro, no recomendada</td></tr>
+                <tr style="background:#fff0e0;"><td><strong>🟠 GABRIELA MISTRAL</strong></td><td><span class="badge media">Media</span></td><td>25-30</td><td>2</td><td><span class="estrato-medio">Medio</span></td><td>1.5 km</td><td>Distancia corta, riesgo de contaminación</td></tr>
+                <tr style="background:#fff0e0;"><td><strong>🟠 AQUILES SERDAN</strong></td><td><span class="badge media">Media</span></td><td>18-22</td><td>2</td><td><span class="estrato-medio">Medio</span></td><td>0.9 km</td><td>Matrícula insuficiente, muy cerca del centro</td></tr>
+                <tr style="background:#fff0e0;"><td><strong>🟠 EMILIANO ZAPATA (Chapultepec)</strong></td><td><span class="badge media">Media</span></td><td>28-34</td><td>2</td><td><span class="estrato-medio">Medio</span></td><td>2.2 km</td><td>Matrícula media, podría considerarse con reservas</td></tr>
+                <tr style="background:#fff0e0;"><td><strong>🟠 IGNACIO ALLENDE (Centro)</strong></td><td><span class="badge media">Media</span></td><td>15-20</td><td>2</td><td><span class="estrato-medio">Medio</span></td><td>1.1 km</td><td>Muy poca matrícula, no cubriría muestra</td></tr>
+                <tr style="background:#fff0e0;"><td><strong>🟠 LEONA VICARIO</strong></td><td><span class="badge media">Media</span></td><td>18-22</td><td>2</td><td><span class="estrato-medio">Medio</span></td><td>2.0 km</td><td>Matrícula baja, no prioritaria</td></tr>
+                <tr style="background:#fff0e0;"><td><strong>🟠 FRANCISCO I. MADERO</strong></td><td><span class="badge media">Media</span></td><td>20-26</td><td>2</td><td><span class="estrato-medio">Medio</span></td><td>2.2 km</td><td>No alcanza los 40 alumnos necesarios</td></tr>
+                <tr style="background:#e8f0fe;"><td><strong>🔵 COLEGIO SINALOA A.C.</strong></td><td><span class="badge privada">Privada</span></td><td>---</td><td>---</td><td><span class="estrato-alto">Alto</span></td><td>2.0 km</td><td>Solo referencia, no se incluye en muestra</td></tr>
+                <tr style="background:#e8f0fe;"><td><strong>🔵 INSTITUTO CHAPULTEPEC</strong></td><td><span class="badge privada">Privada</span></td><td>---</td><td>---</td><td><span class="estrato-alto">Alto</span></td><td>2.2 km</td><td>Privada, no representa población objetivo</td></tr>
+            </tbody>
+        </table>
+        <div class="comment-section">
+            💬 <strong>Comentarios generales sobre la selección:</strong><br>
+            • <strong>Escuelas idóneas (🔴):</strong> Cumplen con matrícula ≥40 alumnos en 5°+6°, estrato bajo-medio y distancia ≥3 km de la UAS. Son ideales para intervención/control sin riesgo de contaminación.<br>
+            • <strong>Escuelas medianamente idóneas (🟠):</strong> Tienen matrícula insuficiente (<40 alumnos) o están demasiado cerca de la UAS (<2 km), lo que podría generar contaminación entre grupos. No se recomiendan para el diseño principal.<br>
+            • <strong>Escuelas poco idóneas (🟡):</strong> Matrícula muy baja o ubicación central; no cubrirían la muestra necesaria (128 alumnos) ni garantizan aislamiento.<br>
+            • <strong>Privadas (🔵):</strong> Estrato socioeconómico alto, no representan la población objetivo del proyecto.<br>
+            • <strong>UAS Nutrición (🟢):</strong> Solo como punto de partida logístico para recorridos. NO es un factor de riesgo de contaminación.
+        </div>
+        <div class="dist-note">
+            🚗 <strong>Criterio de distancia:</strong> Se considera "zona de riesgo de contaminación" cuando dos escuelas están a menos de 2 km entre sí. Las escuelas idóneas están separadas por más de 3 km de la UAS y entre ellas.
+        </div>
+    </div>
+    <footer>
+        🧭 Mapa completo del Sector 12 · Culiacán · La UAS Nutrición se muestra como punto de referencia logística (no como riesgo).
+    </footer>
+</div>
+
+<script>
+    // Coordenadas de la UAS Nutrición (punto logístico)
+    const uasLat = 24.8083;
+    const uasLng = -107.3945;
+    
+    // Inicializar mapa centrado en la UAS
+    var map = L.map('map').setView([uasLat, uasLng], 13);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CartoDB',
+        subdomains: 'abcd'
+    }).addTo(map);
+    
+    // Iconos personalizados
+    const uasIcon = L.divIcon({ html: '<div style="background:#2e7d32; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid white; box-shadow:0 2px 8px black;"><span style="color:white; font-weight:bold; font-size:14px;">U</span></div>', iconSize: [32,32] });
+    const highIcon = L.divIcon({ html: '<div style="background:#d32f2f; width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; border:2px solid white; box-shadow:0 2px 6px black;"><span style="color:white; font-weight:bold; font-size:13px;">🏫</span></div>', iconSize: [28,28] });
+    const mediumIcon = L.divIcon({ html: '<div style="background:#f57c00; width:26px; height:26px; border-radius:8px; display:flex; align-items:center; justify-content:center; border:1px solid white; box-shadow:0 1px 4px black;"><span style="color:white; font-weight:bold; font-size:12px;">⚠️</span></div>', iconSize: [26,26] });
+    const lowIcon = L.divIcon({ html: '<div style="background:#ffb74d; width:24px; height:24px; border-radius:50%; border:1px solid white; box-shadow:0 1px 3px black;"><span style="color:#7a5a1a; font-weight:bold; font-size:11px;">!</span></div>', iconSize: [24,24] });
+    const privIcon = L.divIcon({ html: '<div style="background:#1976d2; width:22px; height:22px; transform:rotate(45deg); border:1px solid white;"></div>', iconSize: [22,22] });
+    
+    // === PUNTO UAS NUTRICIÓN (logístico) ===
+    L.marker([uasLat, uasLng], { icon: uasIcon }).addTo(map)
+        .bindPopup('<b>🏛️ FACULTAD DE NUTRICIÓN UAS</b><br>🚐 Punto de partida para recorridos escolares (solo referencia logística).<br>⚠️ No representa riesgo de contaminación.');
+    
+    // === TODAS las escuelas del Sector 12 ===
+    const schools = {
+        // IDÓNEAS (ROJO)
+        gralVilla23: { 
+            name: "🔴 GRAL. FRANCISCO VILLA (Zona 23)", 
+            lat: 24.8320, lng: -107.4080, 
+            type: "high", 
+            alumnos: "55-65", 
+            estrato: "Medio-bajo", 
+            distancia: "3.4 km",
+            comentario: "Matrícula ideal, estrato adecuado, distancia óptima. Perfecta para intervención."
+        },
+        gralVilla119: { 
+            name: "🔴 GRAL. FRANCISCO VILLA (Zona 119)", 
+            lat: 24.7980, lng: -107.3650, 
+            type: "high", 
+            alumnos: "50-60", 
+            estrato: "Bajo", 
+            distancia: "3.8 km",
+            comentario: "Perfecta para intervención, estrato bajo, buena logística. Altamente recomendada."
+        },
+        lazaroCardenas43: { 
+            name: "🔴 LAZARO CARDENAS (Zona 43)", 
+            lat: 24.7780, lng: -107.3820, 
+            type: "high", 
+            alumnos: "48-56", 
+            estrato: "Medio-bajo", 
+            distancia: "4.0 km",
+            comentario: "Alumnos suficientes, alejada del centro, estrato medio-bajo. Muy recomendada."
+        },
+        emilianoZapata43: { 
+            name: "🔴 EMILIANO ZAPATA (Zona 43)", 
+            lat: 24.8220, lng: -107.3700, 
+            type: "high", 
+            alumnos: "42-50", 
+            estrato: "Bajo", 
+            distancia: "3.6 km",
+            comentario: "Excelente candidata para grupo control o intervención. Cumple todos los criterios."
+        },
+        
+        // MEDIANAMENTE IDÓNEAS (NARANJA)
+        benitoJuarez: { 
+            name: "🟠 BENITO JUAREZ (Centro)", 
+            lat: 24.8125, lng: -107.3910, 
+            type: "medium", 
+            alumnos: "25-30", 
+            estrato: "Medio", 
+            distancia: "1.2 km",
+            comentario: "Cercanía (1.2 km) → riesgo contaminación. Matrícula baja. No recomendada."
+        },
+        justoSierra: { 
+            name: "🟠 JUSTO SIERRA (Centro)", 
+            lat: 24.8110, lng: -107.3965, 
+            type: "medium", 
+            alumnos: "20-25", 
+            estrato: "Medio", 
+            distancia: "1.0 km",
+            comentario: "Muy cerca del centro, matrícula insuficiente. No recomendada."
+        },
+        gabrielaMistral: { 
+            name: "🟠 GABRIELA MISTRAL", 
+            lat: 24.8160, lng: -107.3985, 
+            type: "medium", 
+            alumnos: "25-30", 
+            estrato: "Medio", 
+            distancia: "1.5 km",
+            comentario: "Distancia corta, riesgo de contaminación. Matrícula baja."
+        },
+        aquilesSerdan: { 
+            name: "🟠 AQUILES SERDAN", 
+            lat: 24.8070, lng: -107.3890, 
+            type: "medium", 
+            alumnos: "18-22", 
+            estrato: "Medio", 
+            distancia: "0.9 km",
+            comentario: "Matrícula insuficiente y muy cerca del centro. Descartar."
+        },
+        emilianoZapataChap: { 
+            name: "🟠 EMILIANO ZAPATA (Chapultepec)", 
+            lat: 24.8195, lng: -107.4130, 
+            type: "medium", 
+            alumnos: "28-34", 
+            estrato: "Medio", 
+            distancia: "2.2 km",
+            comentario: "Matrícula media. Podría considerarse con reservas."
+        },
+        ignacioAllende: { 
+            name: "🟠 IGNACIO ALLENDE (Centro)", 
+            lat: 24.8130, lng: -107.3925, 
+            type: "medium", 
+            alumnos: "15-20", 
+            estrato: "Medio", 
+            distancia: "1.1 km",
+            comentario: "Muy poca matrícula, no cubriría muestra. No prioritaria."
+        },
+        leonaVicario: { 
+            name: "🟠 LEONA VICARIO", 
+            lat: 24.8250, lng: -107.4080, 
+            type: "medium", 
+            alumnos: "18-22", 
+            estrato: "Medio", 
+            distancia: "2.0 km",
+            comentario: "Matrícula baja, estrato medio. No alcanza muestra."
+        },
+        franciscoMadero: { 
+            name: "🟠 FRANCISCO I. MADERO", 
+            lat: 24.8185, lng: -107.4035, 
+            type: "medium", 
+            alumnos: "20-26", 
+            estrato: "Medio", 
+            distancia: "2.2 km",
+            comentario: "No alcanza los 40 alumnos necesarios para muestra."
+        },
+        
+        // PRIVADAS (referencia)
+        colegioSinaloa: { 
+            name: "🔵 COLEGIO SINALOA A.C.", 
+            lat: 24.8180, lng: -107.4050, 
+            type: "priv", 
+            alumnos: "---", 
+            estrato: "Alto", 
+            distancia: "2.0 km",
+            comentario: "Privada estrato alto, no representa población objetivo."
+        },
+        institutoChapultepec: { 
+            name: "🔵 INSTITUTO CHAPULTEPEC", 
+            lat: 24.8220, lng: -107.4090, 
+            type: "priv", 
+            alumnos: "---", 
+            estrato: "Alto", 
+            distancia: "2.2 km",
+            comentario: "Privada, solo referencia."
+        }
+    };
+    
+    // Agregar marcadores de escuelas
+    for (let key in schools) {
+        let s = schools[key];
+        let icon;
+        if (s.type === "high") icon = highIcon;
+        else if (s.type === "medium") icon = mediumIcon;
+        else icon = privIcon;
+        
+        let popupContent = `<b>${s.name}</b><br>
+            📚 Alumnos 5°+6°: ${s.alumnos}<br>
+            💰 Estrato: ${s.estrato}<br>
+            📍 Distancia UAS: ${s.distancia}<br>
+            <hr>
+            <strong>💬 Comentario:</strong><br>
+            ${s.comentario}<br>
+            ${s.type === 'high' ? '<span style="color:#d32f2f;">✅ ALTAMENTE IDÓNEA</span>' : (s.type === 'medium' ? '<span style="color:#f57c00;">⚠️ Limitaciones, revisar</span>' : '<span style="color:#1976d2;">🏛️ Solo referencia</span>')}`;
+        
+        L.marker([s.lat, s.lng], { icon: icon }).addTo(map).bindPopup(popupContent);
+    }
+    
+    // Círculo de 2km desde UAS (solo referencia, NO es riesgo de contaminación)
+    L.circle([uasLat, uasLng], {
+        color: '#f57c00',
+        weight: 1.5,
+        fillColor: '#ffb74d',
+        fillOpacity: 0.1,
+        radius: 2000
+    }).addTo(map).bindTooltip("⚠️ Zona de referencia (2 km desde UAS) - No es riesgo de contaminación entre escuelas", { sticky: true });
+    
+    // Círculo de 3.5km para mostrar área ideal
+    L.circle([uasLat, uasLng], {
+        color: '#2b7a4b',
+        weight: 1,
+        fillColor: '#6fbf4c',
+        fillOpacity: 0.05,
+        radius: 3500
+    }).addTo(map).bindTooltip("✅ Área logística ideal (3-4 km desde UAS)", { sticky: true });
+    
+    // Líneas logísticas desde UAS a escuelas idóneas
+    const highSchools = Object.values(schools).filter(s => s.type === "high");
+    highSchools.forEach(s => {
+        L.polyline([[uasLat, uasLng], [s.lat, s.lng]], {
+            color: '#2e7d32',
+            weight: 1.2,
+            opacity: 0.4,
+            dashArray: '5, 7'
+        }).addTo(map).bindTooltip(`Recorrido logístico desde UAS`, { sticky: true });
+    });
+    
+    // Ajustar vista
+    let bounds = L.latLngBounds([[uasLat, uasLng]]);
+    for (let key in schools) {
+        bounds.extend([schools[key].lat, schools[key].lng]);
+    }
+    map.fitBounds(bounds.pad(0.12));
+    
+    // Leyenda flotante
+    var legendMap = L.control({ position: 'bottomright' });
+    legendMap.onAdd = function() {
+        var div = L.DomUtil.create('div', 'legend-map');
+        div.innerHTML = `<div style="background:rgba(10,30,45,0.85); backdrop-filter:blur(6px); color:white; padding:8px 14px; border-radius:28px; font-size:11px; text-align:center;">
+            <strong>🎯 Sector 12 · Culiacán</strong><br>
+            🟢 UAS (logística) &nbsp;| 🔴 Idónea &nbsp;| 🟠 Media &nbsp;| 🔵 Privada<br>
+            <span style="font-size:9px;">Haz clic en cada escuela para ver comentario</span>
+        </div>`;
+        return div;
+    };
+    legendMap.addTo(map);
+    
+    // Resumen ejecutivo
+    var sampleControl = L.control({ position: 'topleft' });
+    sampleControl.onAdd = function() {
+        var div2 = L.DomUtil.create('div', 'sample-float');
+        div2.innerHTML = `<div style="background:#1e4663dd; color:white; padding:8px 16px; border-radius:24px; font-size:11px; backdrop-filter:blur(4px); text-align:center;">
+            📊 <strong>Muestra necesaria:</strong> 128 alumnos<br>
+            🏫 <strong>4 escuelas idóneas</strong> → ≈200 alumnos<br>
+            ✅ <strong>Recomendación:</strong> Usar solo las 4 escuelas rojas
+        </div>`;
+        return div2;
+    };
+    sampleControl.addTo(map);
+</script>
+</body>
+</html>
