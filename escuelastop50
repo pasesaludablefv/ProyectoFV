@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anexo metodológico · Top 50 escuelas</title>
+<style>
+:root {
+  --uas-blue:#003B70;
+  --uas-light:#005B96;
+  --uas-gold:#D4A017;
+  --bg:#f5f7fa;
+  --text:#263238;
+  --green:#2E7D32;
+  --blue:#2563eb;
+  --orange:#EF6C00;
+  --red:#C62828;
+  --shadow:0 6px 18px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Segoe UI,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.55;
+}
+.hero{
+  background:linear-gradient(135deg,var(--uas-blue),var(--uas-light));
+  color:white;
+  text-align:center;
+  padding:38px 20px;
+}
+.hero h1{margin:0 0 10px;font-size:2rem}
+.hero p{margin:0;opacity:.92}
+.container{width:96%;max-width:1650px;margin:0 auto}
+.section{margin:30px auto}
+.section-title{
+  color:var(--uas-blue);
+  border-left:6px solid var(--uas-gold);
+  padding-left:12px;
+  margin-bottom:18px;
+  font-size:1.35rem;
+}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:16px;
+}
+.card{
+  background:#fff;
+  padding:20px;
+  border-radius:16px;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+.card h3{margin:0;color:var(--uas-blue);font-size:.95rem}
+.card .num{font-size:2.35rem;font-weight:800;color:var(--uas-blue)}
+.notice{
+  background:#FFF8E1;
+  border-left:6px solid var(--uas-gold);
+  padding:18px;
+  border-radius:14px;
+  margin-top:14px;
+}
+.toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+  margin-bottom:14px;
+}
+input, select{
+  padding:10px 12px;
+  border:1px solid #cbd5e1;
+  border-radius:10px;
+  background:#fff;
+  font-size:.9rem;
+}
+.table-wrapper{
+  overflow-x:auto;
+  background:#fff;
+  border-radius:16px;
+  box-shadow:var(--shadow);
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:1450px;
+  font-size:.82rem;
+}
+thead{
+  background:var(--uas-blue);
+  color:#fff;
+  position:sticky;
+  top:0;
+  z-index:2;
+}
+th,td{
+  padding:9px 8px;
+  border-bottom:1px solid #e5e7eb;
+  text-align:center;
+  vertical-align:middle;
+}
+tbody tr:hover{background:#f8fafc}
+.school{text-align:left;min-width:245px}
+.badge,.prio{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:999px;
+  font-size:.72rem;
+  font-weight:700;
+  color:#fff;
+  white-space:nowrap;
+}
+.badge.top10{background:var(--uas-gold);color:#1f2937}
+.badge.culiacan{background:var(--green)}
+.badge.fuera{background:#64748b}
+.prio.muy{background:var(--green)}
+.prio.alta{background:var(--blue)}
+.prio.media{background:var(--orange)}
+.prio.baja{background:var(--red)}
+.method{
+  background:#fff;
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  padding:22px;
+}
+.method ul{margin:0 0 0 20px}
+footer{
+  background:var(--uas-blue);
+  color:white;
+  text-align:center;
+  padding:18px;
+  margin-top:36px;
+  font-size:.88rem;
+}
+@media print {
+  .toolbar{display:none}
+  body{background:white}
+  .table-wrapper{box-shadow:none}
+  .hero{padding:20px}
+}
+</style>
+</head>
+<body>
+<header class="hero">
+  <h1>Anexo metodológico · Top 50 estatal por M56</h1>
+  <p>Transparencia del proceso de depuración previo al dashboard de priorización de escuelas · Culiacán, Sinaloa</p>
+</header>
+
+<div class="container">
+
+<section class="section">
+  <h2 class="section-title">Resumen</h2>
+  <div class="cards">
+    <div class="card"><h3>Top estatal revisado</h3><div class="num">50</div><p>Escuelas con mayor M56</p></div>
+    <div class="card"><h3>Identificadas en Culiacán</h3><div class="num">26</div><p>Dentro del Top 50</p></div>
+    <div class="card"><h3>Fuera de Culiacán</h3><div class="num">23</div><p>Mazatlán, Los Mochis, Guasave, etc.</p></div>
+    <div class="card"><h3>Usadas en Top 10 IP</h3><div class="num">10</div><p>Integradas al dashboard final</p></div>
+  </div>
+  <div class="notice">
+    <b>Nota:</b> M56 corresponde a la matrícula real de estudiantes de 5° y 6° grado.
+    Este anexo documenta la reducción inicial del universo escolar y permite verificar cómo se identificaron las escuelas candidatas de Culiacán.
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section-title">Listado Top 50</h2>
+
+  <div class="toolbar">
+    <input type="text" id="searchBox" placeholder="Buscar escuela o DPR..." onkeyup="filterTable()">
+    <select id="classFilter" onchange="filterTable()">
+      <option value="">Todas las clasificaciones</option>
+      <option value="Culiacán">Culiacán</option>
+      <option value="No Culiacán">No Culiacán</option>
+    </select>
+    <select id="top10Filter" onchange="filterTable()">
+      <option value="">Top 10 IP: Todos</option>
+      <option value="Sí">Sí</option>
+      <option value="No">No</option>
+    </select>
+  </div>
+
+  <div class="table-wrapper">
+    <table id="top50Table">
+      <thead>
+        <tr>
+          <th>Rank Top 50</th>
+          <th>DPR</th>
+          <th>Escuela</th>
+          <th>Sector</th>
+          <th>Zona</th>
+          <th>Turno</th>
+          <th>Matrícula total</th>
+          <th>Grupos</th>
+          <th>M56</th>
+          <th>Municipio/localidad</th>
+          <th>Clasificación</th>
+          <th>Top 10 IP</th>
+          <th>Rank IP</th>
+          <th>Distancia UAS</th>
+          <th>Puntaje D</th>
+          <th>Factibilidad</th>
+          <th>IP final</th>
+          <th>Prioridad</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>1</td>
+  <td><b>25PPR0342G</b></td>
+  <td class="school">INSTITUTO CULTURAL DE OCCIDENTE A.C</td>
+  <td>10</td>
+  <td>88</td>
+  <td>MATUTINO</td>
+  <td>793</td>
+  <td>25</td>
+  <td><b>298</b></td>
+  <td>Mazatlán</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>2</td>
+  <td><b>25DPR0987S</b></td>
+  <td class="school">ANGELA PERALTA</td>
+  <td>13</td>
+  <td>102</td>
+  <td>MATUTINO</td>
+  <td>691</td>
+  <td>22</td>
+  <td><b>220</b></td>
+  <td>Mazatlán</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="Sí">
+  <td>3</td>
+  <td><b>25DPR0638M</b></td>
+  <td class="school">GENERAL RAMON F. ITURBE</td>
+  <td>12</td>
+  <td>10</td>
+  <td>MATUTINO</td>
+  <td>560</td>
+  <td>13</td>
+  <td><b>205</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge top10">Culiacán</span></td>
+  <td>Sí</td>
+  <td>2</td>
+  <td>—</td>
+  <td>60</td>
+  <td>100</td>
+  <td><b>86</b></td>
+  <td><span class="prio muy">Muy alta</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="Sí">
+  <td>4</td>
+  <td><b>25DPR2045P</b></td>
+  <td class="school">MIGUEL D. CRISANTES GATZIONIS</td>
+  <td>17</td>
+  <td>109</td>
+  <td>TIEMPO COMPLETO</td>
+  <td>616</td>
+  <td>16</td>
+  <td><b>201</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge top10">Culiacán</span></td>
+  <td>Sí</td>
+  <td>8</td>
+  <td>—</td>
+  <td>40</td>
+  <td>50</td>
+  <td><b>68.12</b></td>
+  <td><span class="prio media">Moderada</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="Sí">
+  <td>5</td>
+  <td><b>25DPR0037T</b></td>
+  <td class="school">JAIME NUNO</td>
+  <td>17</td>
+  <td>109</td>
+  <td>MATUTINO</td>
+  <td>532</td>
+  <td>15</td>
+  <td><b>180</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge top10">Culiacán</span></td>
+  <td>Sí</td>
+  <td>5</td>
+  <td>—</td>
+  <td>60</td>
+  <td>60</td>
+  <td><b>72.51</b></td>
+  <td><span class="prio media">Moderada</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="Sí">
+  <td>6</td>
+  <td><b>25DPR2052Z</b></td>
+  <td class="school">INDEPENDENCIA</td>
+  <td>6</td>
+  <td>98</td>
+  <td>MATUTINO</td>
+  <td>517</td>
+  <td>12</td>
+  <td><b>179</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge top10">Culiacán</span></td>
+  <td>Sí</td>
+  <td>4</td>
+  <td>—</td>
+  <td>75</td>
+  <td>70</td>
+  <td><b>79.54</b></td>
+  <td><span class="prio alta">Alta</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="Sí">
+  <td>7</td>
+  <td><b>25DPR1351Q</b></td>
+  <td class="school">LIC. ADOLFO LOPEZ MATEOS</td>
+  <td>9</td>
+  <td>9</td>
+  <td>MATUTINO</td>
+  <td>530</td>
+  <td>12</td>
+  <td><b>177</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge top10">Culiacán</span></td>
+  <td>Sí</td>
+  <td>1</td>
+  <td>—</td>
+  <td>90</td>
+  <td>80</td>
+  <td><b>86.35</b></td>
+  <td><span class="prio muy">Muy alta</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>8</td>
+  <td><b>25DPR0518Z</b></td>
+  <td class="school">NIÑOS HEROES DE CHAPULTEPEC</td>
+  <td>4</td>
+  <td>53</td>
+  <td>TIEMPO COMPLETO</td>
+  <td>465</td>
+  <td>13</td>
+  <td><b>176</b></td>
+  <td>Juan José Ríos</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="Sí">
+  <td>9</td>
+  <td><b>25DPR1008E</b></td>
+  <td class="school">AGUSTIN MELGAR</td>
+  <td>12</td>
+  <td>10</td>
+  <td>MATUTINO</td>
+  <td>527</td>
+  <td>12</td>
+  <td><b>175</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge top10">Culiacán</span></td>
+  <td>Sí</td>
+  <td>3</td>
+  <td>—</td>
+  <td>75</td>
+  <td>100</td>
+  <td><b>84.66</b></td>
+  <td><span class="prio alta">Alta</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>10</td>
+  <td><b>25DPR1984B</b></td>
+  <td class="school">VENUSTIANO CARRANZA</td>
+  <td>13</td>
+  <td>111</td>
+  <td>MATUTINO</td>
+  <td>564</td>
+  <td>14</td>
+  <td><b>173</b></td>
+  <td>Mazatlán</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="Sí">
+  <td>11</td>
+  <td><b>25DPR0584Z</b></td>
+  <td class="school">DIONISIO SALDAÑA LOPEZ</td>
+  <td>6</td>
+  <td>8</td>
+  <td>MATUTINO</td>
+  <td>512</td>
+  <td>12</td>
+  <td><b>171</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge top10">Culiacán</span></td>
+  <td>Sí</td>
+  <td>9</td>
+  <td>—</td>
+  <td>40</td>
+  <td>50</td>
+  <td><b>61.54</b></td>
+  <td><span class="prio baja">Baja preliminar</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="Sí">
+  <td>12</td>
+  <td><b>25DPR0904T</b></td>
+  <td class="school">LAZARO CARDENAS</td>
+  <td>6</td>
+  <td>8</td>
+  <td>MATUTINO</td>
+  <td>493</td>
+  <td>12</td>
+  <td><b>171</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge top10">Culiacán</span></td>
+  <td>Sí</td>
+  <td>7</td>
+  <td>—</td>
+  <td>60</td>
+  <td>60</td>
+  <td><b>70.54</b></td>
+  <td><span class="prio media">Moderada</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="Sí">
+  <td>13</td>
+  <td><b>25DPR2033K</b></td>
+  <td class="school">JOAQUIN ALEJANDRO CASTRO RIVERA</td>
+  <td>16</td>
+  <td>126</td>
+  <td>MATUTINO</td>
+  <td>485</td>
+  <td>13</td>
+  <td><b>168</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge top10">Culiacán</span></td>
+  <td>Sí</td>
+  <td>10</td>
+  <td>—</td>
+  <td>40</td>
+  <td>50</td>
+  <td><b>60.88</b></td>
+  <td><span class="prio baja">Baja preliminar</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="Sí">
+  <td>14</td>
+  <td><b>25DPR1953I</b></td>
+  <td class="school">RENATO VEGA AMADOR</td>
+  <td>12</td>
+  <td>105</td>
+  <td>MATUTINO</td>
+  <td>501</td>
+  <td>12</td>
+  <td><b>167</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge top10">Culiacán</span></td>
+  <td>Sí</td>
+  <td>6</td>
+  <td>—</td>
+  <td>40</td>
+  <td>100</td>
+  <td><b>70.66</b></td>
+  <td><span class="prio media">Moderada</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>15</td>
+  <td><b>25DPR1895I</b></td>
+  <td class="school">SOLIDARIDAD</td>
+  <td>16</td>
+  <td>126</td>
+  <td>MATUTINO</td>
+  <td>510</td>
+  <td>12</td>
+  <td><b>164</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>16</td>
+  <td><b>25DPR1908W</b></td>
+  <td class="school">EDUARDO LABASTIDA KOFAHL</td>
+  <td>14</td>
+  <td>34</td>
+  <td>MATUTINO</td>
+  <td>473</td>
+  <td>12</td>
+  <td><b>162</b></td>
+  <td>Los Mochis</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>17</td>
+  <td><b>25DPR0170Z</b></td>
+  <td class="school">CARMEN SERDAN</td>
+  <td>4</td>
+  <td>95</td>
+  <td>MATUTINO</td>
+  <td>454</td>
+  <td>14</td>
+  <td><b>162</b></td>
+  <td>Guasave</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>18</td>
+  <td><b>25DPR1855H</b></td>
+  <td class="school">FRATERNIDAD</td>
+  <td>12</td>
+  <td>105</td>
+  <td>MATUTINO</td>
+  <td>498</td>
+  <td>12</td>
+  <td><b>162</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>19</td>
+  <td><b>25DPR0420P</b></td>
+  <td class="school">GENERAL ANTONIO ROSALES</td>
+  <td>14</td>
+  <td>30</td>
+  <td>TIEMPO COMPLETO</td>
+  <td>468</td>
+  <td>12</td>
+  <td><b>161</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>20</td>
+  <td><b>25DPR1955G</b></td>
+  <td class="school">LUIS DONALDO COLOSIO MURRIETA</td>
+  <td>19</td>
+  <td>44</td>
+  <td>MATUTINO</td>
+  <td>478</td>
+  <td>13</td>
+  <td><b>160</b></td>
+  <td>Mazatlán</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>21</td>
+  <td><b>25DPR1929I</b></td>
+  <td class="school">CRISTOBAL COLON</td>
+  <td>2</td>
+  <td>45</td>
+  <td>MATUTINO</td>
+  <td>511</td>
+  <td>13</td>
+  <td><b>160</b></td>
+  <td>Los Mochis</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>22</td>
+  <td><b>25DPR2122D</b></td>
+  <td class="school">ANA ISABEL SAENZ UNGER</td>
+  <td>19</td>
+  <td>123</td>
+  <td>MATUTINO</td>
+  <td>465</td>
+  <td>12</td>
+  <td><b>160</b></td>
+  <td>Mazatlán</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>23</td>
+  <td><b>25DPR1771Z</b></td>
+  <td class="school">MARGARITA MAZA DE JUAREZ</td>
+  <td>12</td>
+  <td>5</td>
+  <td>MATUTINO</td>
+  <td>466</td>
+  <td>12</td>
+  <td><b>159</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>24</td>
+  <td><b>25DPR0670V</b></td>
+  <td class="school">NIÑOS HEROES</td>
+  <td>6</td>
+  <td>8</td>
+  <td>MATUTINO</td>
+  <td>481</td>
+  <td>13</td>
+  <td><b>159</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>25</td>
+  <td><b>25DPR1944A</b></td>
+  <td class="school">SIMON JIMENEZ CARDENAS</td>
+  <td>19</td>
+  <td>44</td>
+  <td>MATUTINO</td>
+  <td>492</td>
+  <td>14</td>
+  <td><b>157</b></td>
+  <td>Mazatlán</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>26</td>
+  <td><b>25DPR2097V</b></td>
+  <td class="school">PROFR. SANTIAGO ZUÑIGA BARRON</td>
+  <td>14</td>
+  <td>124</td>
+  <td>MATUTINO</td>
+  <td>387</td>
+  <td>10</td>
+  <td><b>157</b></td>
+  <td>Los Mochis</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>27</td>
+  <td><b>25DPR0043D</b></td>
+  <td class="school">LAZARO CARDENAS</td>
+  <td>9</td>
+  <td>9</td>
+  <td>MATUTINO</td>
+  <td>466</td>
+  <td>12</td>
+  <td><b>156</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>28</td>
+  <td><b>25DPR0817Y</b></td>
+  <td class="school">CIPRIANO OBEZO CAMARGO</td>
+  <td>7</td>
+  <td>121</td>
+  <td>MATUTINO</td>
+  <td>488</td>
+  <td>12</td>
+  <td><b>154</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>29</td>
+  <td><b>25DPR0825G</b></td>
+  <td class="school">EUSTAQUIO BUELNA</td>
+  <td>5</td>
+  <td>15</td>
+  <td>MATUTINO</td>
+  <td>457</td>
+  <td>12</td>
+  <td><b>154</b></td>
+  <td>Guamúchil</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>30</td>
+  <td><b>25DPR0811D</b></td>
+  <td class="school">GENERAL MARIANO ESCOBEDO</td>
+  <td>4</td>
+  <td>21</td>
+  <td>MATUTINO</td>
+  <td>431</td>
+  <td>14</td>
+  <td><b>154</b></td>
+  <td>Guasave</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>31</td>
+  <td><b>25DPR0040G</b></td>
+  <td class="school">JOSE VASCONCELOS</td>
+  <td>7</td>
+  <td>57</td>
+  <td>MATUTINO</td>
+  <td>442</td>
+  <td>12</td>
+  <td><b>154</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>32</td>
+  <td><b>25DPR0451I</b></td>
+  <td class="school">GENERAL DE DIVISION MANUEL AVILA CAMACHO</td>
+  <td>6</td>
+  <td>1</td>
+  <td>TIEMPO COMPLETO</td>
+  <td>372</td>
+  <td>14</td>
+  <td><b>154</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>33</td>
+  <td><b>25DPR0841Y</b></td>
+  <td class="school">PROF. JOSUE R. DIAZ E.</td>
+  <td>6</td>
+  <td>8</td>
+  <td>MATUTINO</td>
+  <td>467</td>
+  <td>12</td>
+  <td><b>153</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>34</td>
+  <td><b>25DPR1777U</b></td>
+  <td class="school">PABLO DE VILLAVICENCIO</td>
+  <td>12</td>
+  <td>105</td>
+  <td>MATUTINO</td>
+  <td>430</td>
+  <td>12</td>
+  <td><b>152</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>35</td>
+  <td><b>25DPR2038F</b></td>
+  <td class="school">EL CENTENARIO DE LOS MOCHIS</td>
+  <td>2</td>
+  <td>125</td>
+  <td>MATUTINO</td>
+  <td>453</td>
+  <td>12</td>
+  <td><b>152</b></td>
+  <td>Los Mochis</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>36</td>
+  <td><b>25DPR1733X</b></td>
+  <td class="school">CONSTITUCION MEXICANA</td>
+  <td>14</td>
+  <td>91</td>
+  <td>MATUTINO</td>
+  <td>464</td>
+  <td>12</td>
+  <td><b>152</b></td>
+  <td>Los Mochis</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>37</td>
+  <td><b>25DPR1856G</b></td>
+  <td class="school">ALVARO OBREGON</td>
+  <td>12</td>
+  <td>113</td>
+  <td>MATUTINO</td>
+  <td>477</td>
+  <td>12</td>
+  <td><b>151</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>38</td>
+  <td><b>25DPR1760U</b></td>
+  <td class="school">J. GUADALUPE RAMIREZ AGUILAR</td>
+  <td>7</td>
+  <td>12</td>
+  <td>TIEMPO COMPLETO</td>
+  <td>381</td>
+  <td>12</td>
+  <td><b>151</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>39</td>
+  <td><b>25DPR2088N</b></td>
+  <td class="school">SINALOA</td>
+  <td>17</td>
+  <td>118</td>
+  <td>MATUTINO</td>
+  <td>460</td>
+  <td>12</td>
+  <td><b>150</b></td>
+  <td>Navolato</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>40</td>
+  <td><b>25DPR0880Z</b></td>
+  <td class="school">GABRIELA MISTRAL</td>
+  <td>10</td>
+  <td>25</td>
+  <td>MATUTINO</td>
+  <td>402</td>
+  <td>14</td>
+  <td><b>149</b></td>
+  <td>Mazatlán</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>41</td>
+  <td><b>25DPR2063E</b></td>
+  <td class="school">DR. ENRIQUE VILLA RIVERA</td>
+  <td>14</td>
+  <td>91</td>
+  <td>MATUTINO</td>
+  <td>381</td>
+  <td>10</td>
+  <td><b>149</b></td>
+  <td>Los Mochis</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>42</td>
+  <td><b>25DPR1330D</b></td>
+  <td class="school">LUIS DONALDO COLOSIO MURRIETA</td>
+  <td>2</td>
+  <td>125</td>
+  <td>VESPERTINO</td>
+  <td>432</td>
+  <td>12</td>
+  <td><b>149</b></td>
+  <td>Los Mochis</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>43</td>
+  <td><b>25DPR1322V</b></td>
+  <td class="school">FRANCISCO MARQUEZ</td>
+  <td>12</td>
+  <td>10</td>
+  <td>TIEMPO COMPLETO</td>
+  <td>478</td>
+  <td>12</td>
+  <td><b>148</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>44</td>
+  <td><b>25DPR0251K</b></td>
+  <td class="school">DEMOCRACIA</td>
+  <td>10</td>
+  <td>25</td>
+  <td>MATUTINO</td>
+  <td>409</td>
+  <td>12</td>
+  <td><b>148</b></td>
+  <td>Mazatlán</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán periférica / no prioritaria por distancia" data-top10="No">
+  <td>45</td>
+  <td><b>25DPR1883D</b></td>
+  <td class="school">RAFAEL BUELNA TENORIO</td>
+  <td>9</td>
+  <td>110</td>
+  <td>MATUTINO</td>
+  <td>454</td>
+  <td>12</td>
+  <td><b>147</b></td>
+  <td>Culiacán (Costa Rica, muy lejos)</td>
+  <td><span class="badge fuera">Culiacán periférica / no prioritaria por distancia</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>46</td>
+  <td><b>25DPR0961K</b></td>
+  <td class="school">PROF. GRACIANO SANCHEZ</td>
+  <td>13</td>
+  <td>24</td>
+  <td>MATUTINO</td>
+  <td>454</td>
+  <td>13</td>
+  <td><b>147</b></td>
+  <td>Mazatlán</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>47</td>
+  <td><b>25DPR1763R</b></td>
+  <td class="school">GREGORIO TORRES QUINTERO</td>
+  <td>2</td>
+  <td>32</td>
+  <td>MATUTINO</td>
+  <td>469</td>
+  <td>13</td>
+  <td><b>146</b></td>
+  <td>Ahome</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>48</td>
+  <td><b>25DPR1969J</b></td>
+  <td class="school">RAMON TEJEDA RODRIGUEZ</td>
+  <td>12</td>
+  <td>100</td>
+  <td>MATUTINO</td>
+  <td>441</td>
+  <td>12</td>
+  <td><b>145</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="Culiacán" data-top10="No">
+  <td>49</td>
+  <td><b>25DPR0602Y</b></td>
+  <td class="school">RAFAEL RAMIREZ</td>
+  <td>7</td>
+  <td>12</td>
+  <td>MATUTINO</td>
+  <td>373</td>
+  <td>12</td>
+  <td><b>145</b></td>
+  <td>Culiacán</td>
+  <td><span class="badge culiacan">Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+<tr data-clasificacion="No Culiacán" data-top10="No">
+  <td>50</td>
+  <td><b>25DPR1857F</b></td>
+  <td class="school">JUAN ESCUTIA</td>
+  <td>3</td>
+  <td>26</td>
+  <td>MATUTINO</td>
+  <td>419</td>
+  <td>12</td>
+  <td><b>145</b></td>
+  <td>Guasave</td>
+  <td><span class="badge fuera">No Culiacán</span></td>
+  <td>No</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td>—</td>
+  <td><b>—</b></td>
+  <td><span class="">—</span></td>
+</tr>
+
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section-title">Criterios metodológicos</h2>
+  <div class="method">
+    <ul>
+      <li><b>M56:</b> Matrícula real de estudiantes de 5° y 6° grado. Se calcula como INSCRIP5H + INSCRIP5M + INSCRIP6H + INSCRIP6M.</li><li><b>Top 50:</b> Listado estatal ordenado de mayor a menor M56 para transparentar la reducción inicial del universo escolar.</li><li><b>Identificación municipal/localidad:</b> Validación realizada con DPR y revisión manual del usuario. Permite separar escuelas de Culiacán de otros municipios/localidades.</li><li><b>Dashboard final:</b> El dashboard usa el Top 10 de Culiacán con distancias reales a la Facultad de Ciencias de la Nutrición y Gastronomía UAS.</li><li><b>Fórmula IP:</b> IP = (0.45 × M56 normalizado) + (0.35 × puntaje de distancia) + (0.20 × factibilidad operativa).</li><li><b>Escala distancia:</b> ≤3 km = 100; &gt;3–6 km = 90; &gt;6–9 km = 75; &gt;9–12 km = 60; &gt;12 km = 40.</li><li><b>Nota metodológica:</b> El IP es un criterio de selección logística y operativa; no mide consumo de frutas y verduras ni estado nutricional.</li>
+    </ul>
+  </div>
+</section>
+
+</div>
+
+<footer>
+Anexo metodológico · Selección y priorización de escuelas · Proyecto de tesis
+</footer>
+
+<script>
+function normalizeText(txt){
+  return (txt || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function filterTable(){
+  const search = normalizeText(document.getElementById("searchBox").value);
+  const classFilter = document.getElementById("classFilter").value;
+  const top10Filter = document.getElementById("top10Filter").value;
+  const rows = document.querySelectorAll("#top50Table tbody tr");
+
+  rows.forEach(row => {
+    const text = normalizeText(row.innerText);
+    const clasif = row.getAttribute("data-clasificacion");
+    const top10 = row.getAttribute("data-top10");
+
+    const okSearch = !search || text.includes(search);
+    const okClass = !classFilter || clasif === classFilter;
+    const okTop10 = !top10Filter || top10 === top10Filter;
+
+    row.style.display = (okSearch && okClass && okTop10) ? "" : "none";
+  });
+}
+</script>
+
+</body>
+</html>
