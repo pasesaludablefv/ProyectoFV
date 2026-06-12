@@ -210,24 +210,20 @@ footer{
 <section class="section">
   <h2 class="section-title">Componentes del Índice de Prioridad</h2>
   <div class="criteria">
-    <div class="criteria-card"><h3>40%</h3><p>Matrícula real de 5° y 6° grado</p></div>
-    <div class="criteria-card"><h3>30%</h3><p>Distancia logística a la UAS</p></div>
+    <div class="criteria-card"><h3>45%</h3><p>Matrícula real de 5° y 6° grado</p></div>
+    <div class="criteria-card"><h3>35%</h3><p>Distancia logística a la UAS</p></div>
     <div class="criteria-card"><h3>20%</h3><p>Factibilidad operativa</p></div>
-    <div class="criteria-card"><h3>10%</h3><p>Rezago social contextual</p></div>
   </div>
 </section>
 
 <section class="section">
   <h2 class="section-title">Fórmula del IP</h2>
   <div class="formula-box">
-    <div class="formula">IP = (0.40 × M56) + (0.30 × D) + (0.20 × F) + (0.10 × R)</div>
+    <div class="formula">IP = (0.45 × M56) + (0.35 × D) + (0.20 × F)</div>
     <div class="notice">
-      <b>Nota metodológica:</b> el Índice de Prioridad se utiliza exclusivamente como criterio de selección logística y operativa de escuelas.
-      No debe interpretarse como indicador del consumo de frutas y verduras ni como medición nutricional de la población escolar.
+      <b>Nota metodológica:</b> el Índice de Prioridad fue utilizado exclusivamente como herramienta para la selección preliminar de escuelas candidatas considerando criterios de matrícula potencial, factibilidad logística y factibilidad operativa. Este índice no debe interpretarse como indicador del consumo de frutas y verduras ni como una medida del estado nutricional de la población escolar.
       <br><br>
       <b>M56</b> = matrícula real de estudiantes de 5° y 6° grado.
-      <br>
-      El componente de rezago social contextual se mantiene en valor neutral provisional hasta validación definitiva por AGEB/CONEVAL.
     </div>
   </div>
 </section>
@@ -245,9 +241,10 @@ footer{
       <p>&gt;12 km = 40 puntos</p>
       <br>
       <h3 style="color:var(--uas-blue);margin-bottom:12px;">Interpretación del IP</h3>
-      <p><span class="badge badge-high">≥80</span> Alta prioridad</p>
-      <p><span class="badge badge-mid">70–79</span> Prioridad moderada</p>
-      <p><span class="badge badge-low">&lt;70</span> Prioridad baja preliminar</p>
+      <p><span class="badge badge-high">≥85</span> Muy alta prioridad</p>
+      <p><span class="badge badge-high">75–84</span> Alta prioridad</p>
+      <p><span class="badge badge-mid">65–74</span> Prioridad moderada</p>
+      <p><span class="badge badge-low">&lt;65</span> Prioridad baja preliminar</p>
       <br>
       <p class="small">Las cuatro escuelas mejor posicionadas se muestran como candidatas preliminares para revisión. La asignación intervención/control se realizará después de la validación institucional.</p>
     </div>
@@ -285,16 +282,18 @@ footer{
 <section class="section">
   <h2 class="section-title">Justificación</h2>
   <div class="method-box">
-    La selección preliminar prioriza escuelas con alta matrícula real de estudiantes de 5° y 6° grado, distancia logística razonable respecto a la Facultad de Ciencias de la Nutrición y Gastronomía de la UAS y factibilidad operativa para completar las fases del protocolo. 
+    La selección preliminar de escuelas priorizó planteles con mayor matrícula potencial de estudiantes de 5° y 6° grado, adecuada factibilidad operativa y menor distancia logística respecto al centro coordinador de la intervención, ubicado en la Facultad de Ciencias de la Nutrición y Gastronomía de la Universidad Autónoma de Sinaloa.
     <br><br>
-    La factibilidad operativa integra condiciones prácticas de coordinación, accesibilidad institucional, turno y posibilidad de seguimiento. Aunque el acceso administrativo a ciertos sectores puede facilitar la implementación, el criterio se presenta como factibilidad operativa general para evitar interpretaciones de selección por influencia.
+    Estos criterios fueron incorporados con la finalidad de maximizar la viabilidad del protocolo, favorecer la implementación completa de las actividades programadas y optimizar el seguimiento durante las 12 semanas de intervención.
+    <br><br>
+    Posteriormente, las escuelas seleccionadas serán sometidas a revisión por parte del comité tutorial para la determinación definitiva de los planteles participantes. Una vez validadas, la asignación a los grupos de intervención y control se realizará mediante un procedimiento de aleatorización, con el propósito de fortalecer el rigor metodológico del estudio.
   </div>
 </section>
 
 </div>
 
 <footer>
-Sistema de Priorización de Escuelas · Versión preliminar para revisión con directora/comité tutorial
+Sistema de Priorización de Escuelas · Versión 1
 </footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -308,60 +307,61 @@ const uas = {
 
 const escuelas = [
   {
-    rank:1,dpr:"25DPR0638M",nombre:"General Ramón F. Iturbe",sector:12,m56:205,
-    distancia:11.1,lat:24.770642296057993,lng:-107.41865158227887,
-    dScore:60,fScore:100,rScore:60,ip:84.00
+    rank:1,dpr:"25DPR1351Q",nombre:"Lic. Adolfo López Mateos",sector:9,m56:177,
+    distancia:5.0,lat:24.805512683746,lng:-107.40933895186838,
+    dScore:90,fScore:80,ip:86.35
   },
   {
-    rank:2,dpr:"25DPR1351Q",nombre:"Lic. Adolfo López Mateos",sector:9,m56:177,
-    distancia:5.0,lat:24.805512683746,lng:-107.40933895186838,
-    dScore:90,fScore:80,rScore:60,ip:83.54
+    rank:2,dpr:"25DPR0638M",nombre:"General Ramón F. Iturbe",sector:12,m56:205,
+    distancia:11.1,lat:24.770642296057993,lng:-107.41865158227887,
+    dScore:60,fScore:100,ip:86.00
   },
   {
     rank:3,dpr:"25DPR1008E",nombre:"Agustín Melgar",sector:12,m56:175,
     distancia:7.8,lat:24.794461603742192,lng:-107.36237854450785,
-    dScore:75,fScore:100,rScore:60,ip:82.65
+    dScore:75,fScore:100,ip:84.66
   },
   {
     rank:4,dpr:"25DPR2052Z",nombre:"Independencia",sector:6,m56:179,
     distancia:7.7,lat:24.827832376235072,lng:-107.44302749780954,
-    dScore:75,fScore:70,rScore:60,ip:77.43
+    dScore:75,fScore:70,ip:79.54
   },
   {
     rank:5,dpr:"25DPR0037T",nombre:"Jaime Nuño",sector:17,m56:180,
     distancia:11.2,lat:24.77508443193519,lng:-107.45143890528024,
-    dScore:60,fScore:60,rScore:60,ip:71.12
+    dScore:60,fScore:60,ip:72.51
   },
   {
     rank:6,dpr:"25DPR1953I",nombre:"Renato Vega Amador",sector:12,m56:167,
     distancia:14.2,lat:24.753721846666117,lng:-107.43401393567994,
-    dScore:40,fScore:100,rScore:60,ip:70.59
+    dScore:40,fScore:100,ip:70.66
   },
   {
     rank:7,dpr:"25DPR0904T",nombre:"Lázaro Cárdenas",sector:6,m56:171,
     distancia:10.4,lat:24.775325728657187,lng:-107.37395030037256,
-    dScore:60,fScore:60,rScore:60,ip:69.37
+    dScore:60,fScore:60,ip:70.54
   },
   {
     rank:8,dpr:"25DPR2045P",nombre:"Miguel D. Crisantes Gatzionis",sector:17,m56:201,
     distancia:13.4,lat:24.758491497524933,lng:-107.46089563011083,
-    dScore:40,fScore:50,rScore:60,ip:67.22
+    dScore:40,fScore:50,ip:68.12
   },
   {
     rank:9,dpr:"25DPR0584Z",nombre:"Dionisio Saldaña López",sector:6,m56:171,
     distancia:12.1,lat:24.761315209550943,lng:-107.37204692768432,
-    dScore:40,fScore:50,rScore:60,ip:61.37
+    dScore:40,fScore:50,ip:61.54
   },
   {
     rank:10,dpr:"25DPR2033K",nombre:"Joaquín Alejandro Castro Rivera",sector:16,m56:168,
     distancia:12.2,lat:24.759341409522627,lng:-107.41148471980443,
-    dScore:40,fScore:50,rScore:60,ip:60.78
+    dScore:40,fScore:50,ip:60.88
   }
 ];
 
 function priorityBadge(ip){
-  if(ip >= 80) return '<span class="badge badge-high">Alta</span>';
-  if(ip >= 70) return '<span class="badge badge-mid">Moderada</span>';
+  if(ip >= 85) return '<span class="badge badge-high">Muy alta</span>';
+  if(ip >= 75) return '<span class="badge badge-high">Alta</span>';
+  if(ip >= 65) return '<span class="badge badge-mid">Moderada</span>';
   return '<span class="badge badge-low">Baja preliminar</span>';
 }
 
