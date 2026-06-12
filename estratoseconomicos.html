@@ -1,193 +1,465 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Mapa Socioeconómico Completo de Culiacán | CONEVAL · INEGI</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: system-ui, 'Segoe UI', sans-serif; background: #eef2f5; padding: 20px; }
-        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 32px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        .header { background: #0b2b3b; color: white; padding: 20px 30px; }
-        .header h1 { font-size: 1.8rem; font-weight: 700; }
-        .header p { opacity: 0.85; margin-top: 8px; }
-        .map-wrapper { height: 550px; width: 100%; border-bottom: 1px solid #cfdee9; }
-        #map { height: 100%; width: 100%; }
-        .info-panel { padding: 20px 25px; background: #fefcf5; }
-        .legend { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px; background: white; padding: 12px 20px; border-radius: 60px; justify-content: center; }
-        .legend-item { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; font-weight: 500; }
-        .legend-color { width: 24px; height: 18px; border-radius: 4px; }
-        .stats-grid { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 25px; }
-        .stat-card { flex: 1; min-width: 180px; background: white; border-radius: 24px; padding: 16px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
-        .stat-card h4 { color: #1f5e3a; margin-bottom: 8px; font-size: 0.9rem; }
-        .stat-card .number { font-size: 2rem; font-weight: 700; color: #0b2b3b; }
-        .school-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; background: white; border-radius: 20px; overflow: hidden; margin-top: 20px; }
-        .school-table th, .school-table td { padding: 10px 6px; text-align: left; border-bottom: 1px solid #e9edf2; }
-        .school-table th { background: #eef3fa; font-weight: 700; color: #1e4663; }
-        .estrato-bajo { background: #fee2e2; color: #991b1b; padding: 3px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
-        .estrato-medio-bajo { background: #fff3e3; color: #b45309; padding: 3px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
-        .estrato-medio { background: #fef9c3; color: #854d0e; padding: 3px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
-        .estrato-medio-alto { background: #d9f0e6; color: #2b6e3c; padding: 3px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
-        .estrato-alto { background: #d1fae5; color: #065f46; padding: 3px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
-        .privada { background: #e0e7ff; color: #1e3a8a; padding: 3px 8px; border-radius: 20px; font-size: 0.7rem; font-weight: 600; display: inline-block; }
-        .method-note { background: #eef5ea; border-left: 5px solid #f4b942; padding: 15px 20px; border-radius: 20px; margin-top: 20px; font-size: 0.75rem; color: #3a5a2e; }
-        .abbr-table { width: 100%; margin-top: 20px; font-size: 0.7rem; border-collapse: collapse; background: #f9fafc; border-radius: 16px; overflow: hidden; }
-        .abbr-table th, .abbr-table td { padding: 6px 10px; border-bottom: 1px solid #e2e8f0; }
-        .abbr-table th { background: #eef2e8; font-weight: 600; }
-        footer { background: #eef2f7; text-align: center; font-size: 0.7rem; padding: 12px; color: #2c4e6e; }
-        @media (max-width: 750px) { .stats-grid { flex-direction: column; } .school-table { font-size: 0.7rem; } }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Priorización de Escuelas · Culiacán</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+:root{
+  --uas-blue:#003B70;
+  --uas-light:#005B96;
+  --uas-gold:#D4A017;
+  --green:#2E7D32;
+  --yellow:#F9A825;
+  --orange:#EF6C00;
+  --red:#C62828;
+  --gray:#f5f7fa;
+  --dark:#263238;
+  --shadow:0 6px 18px rgba(0,0,0,.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:Segoe UI,Arial,sans-serif;
+  background:var(--gray);
+  color:var(--dark);
+  line-height:1.55;
+}
+.hero{
+  background:linear-gradient(135deg,var(--uas-blue),var(--uas-light));
+  color:#fff;
+  text-align:center;
+  padding:42px 20px;
+}
+.hero h1{font-size:2.15rem;margin-bottom:10px}
+.hero h2{font-size:1.05rem;font-weight:400;opacity:.95}
+.hero p{margin-top:8px;opacity:.9}
+.container{width:95%;max-width:1550px;margin:auto}
+.section{margin:34px auto}
+.section-title{
+  color:var(--uas-blue);
+  border-left:6px solid var(--uas-gold);
+  padding-left:12px;
+  margin-bottom:18px;
+  font-size:1.45rem;
+}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:18px;
+}
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding:22px;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+.card h3{color:var(--uas-blue);font-size:1rem}
+.card-number{font-size:2.5rem;font-weight:800;color:var(--uas-blue)}
+.card p{font-size:.9rem;color:#64748b}
+.flow{
+  display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px;
+}
+.flow-box{
+  background:#fff;
+  min-width:165px;
+  padding:16px;
+  text-align:center;
+  border-left:6px solid var(--uas-blue);
+  border-radius:12px;
+  box-shadow:var(--shadow);
+  font-size:.9rem;
+}
+.arrow{font-size:1.6rem;color:var(--uas-blue)}
+.criteria{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:18px;
+}
+.criteria-card{
+  background:#fff;
+  border-radius:16px;
+  padding:22px;
+  text-align:center;
+  box-shadow:var(--shadow);
+}
+.criteria-card h3{font-size:2rem;color:var(--uas-blue)}
+.formula-box,.notice,.method-box{
+  background:#fff;
+  border-radius:16px;
+  padding:24px;
+  box-shadow:var(--shadow);
+}
+.formula{
+  text-align:center;
+  font-size:1.65rem;
+  font-weight:800;
+  color:var(--uas-blue);
+}
+.notice{
+  margin-top:18px;
+  background:#FFF8E1;
+  border-left:6px solid var(--uas-gold);
+  box-shadow:none;
+}
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:22px;
+}
+#map{
+  height:620px;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.table-wrapper{
+  overflow-x:auto;
+  border-radius:16px;
+  box-shadow:var(--shadow);
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:#fff;
+  min-width:980px;
+  font-size:.86rem;
+}
+thead{background:var(--uas-blue);color:#fff}
+th,td{padding:10px;border-bottom:1px solid #e5e7eb;text-align:center}
+tbody tr:hover{background:#f8fafc}
+.rank-1{background:#ecfdf5}
+.rank-2{background:#fefce8}
+.badge{
+  display:inline-block;
+  padding:4px 9px;
+  border-radius:999px;
+  color:#fff;
+  font-size:.75rem;
+  font-weight:700;
+}
+.badge-high{background:var(--green)}
+.badge-mid{background:var(--orange)}
+.badge-low{background:var(--red)}
+.top4{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:18px;
+}
+.school-card{
+  background:#fff;
+  border-radius:16px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  border-top:7px solid var(--uas-gold);
+}
+.school-card h3{color:var(--uas-blue);margin-bottom:8px}
+.small{font-size:.85rem;color:#64748b}
+footer{
+  margin-top:36px;
+  background:var(--uas-blue);
+  color:#fff;
+  text-align:center;
+  padding:18px;
+  font-size:.9rem;
+}
+@media(max-width:900px){
+  .dashboard-grid{grid-template-columns:1fr}
+  .flow{flex-direction:column}
+  .arrow{transform:rotate(90deg)}
+}
+</style>
 </head>
+
 <body>
+
+<header class="hero">
+  <h1>Sistema de Priorización de Escuelas</h1>
+  <h2>Selección preliminar de planteles para intervención educativa en escolares de 5° y 6° grado</h2>
+  <p>Facultad de Ciencias de la Nutrición y Gastronomía · Universidad Autónoma de Sinaloa</p>
+</header>
+
 <div class="container">
-    <div class="header">
-        <h1>📍 Estratos Socioeconómicos · Culiacán (Cobertura completa)</h1>
-        <p>Mapa basado en datos del CONEVAL (Índice de Rezago Social 2020) e INEGI (Censo 2020). Se incluyen escuelas priorizadas, de zona centro y privadas para contraste.</p>
+
+<section class="section">
+  <h2 class="section-title">Resumen del proceso</h2>
+  <div class="cards">
+    <div class="card"><h3>Universo estatal</h3><div class="card-number">1384</div><p>Escuelas en la base 2024–2025</p></div>
+    <div class="card"><h3>Top estatal</h3><div class="card-number">50</div><p>Mayor matrícula real M56</p></div>
+    <div class="card"><h3>Culiacán</h3><div class="card-number">26</div><p>Identificadas dentro del Top 50</p></div>
+    <div class="card"><h3>Top preliminar</h3><div class="card-number">10</div><p>Para revisión metodológica</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section-title">Proceso metodológico</h2>
+  <div class="flow">
+    <div class="flow-box">1384 escuelas estatales</div><div class="arrow">→</div>
+    <div class="flow-box">Top 50 por M56</div><div class="arrow">→</div>
+    <div class="flow-box">26 escuelas de Culiacán</div><div class="arrow">→</div>
+    <div class="flow-box">Distancia a UAS</div><div class="arrow">→</div>
+    <div class="flow-box">Índice de Prioridad</div><div class="arrow">→</div>
+    <div class="flow-box">Top 10 preliminar</div><div class="arrow">→</div>
+    <div class="flow-box">Validación con directora/comité</div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section-title">Componentes del Índice de Prioridad</h2>
+  <div class="criteria">
+    <div class="criteria-card"><h3>40%</h3><p>Matrícula real de 5° y 6° grado</p></div>
+    <div class="criteria-card"><h3>30%</h3><p>Distancia logística a la UAS</p></div>
+    <div class="criteria-card"><h3>20%</h3><p>Factibilidad operativa</p></div>
+    <div class="criteria-card"><h3>10%</h3><p>Rezago social contextual</p></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section-title">Fórmula del IP</h2>
+  <div class="formula-box">
+    <div class="formula">IP = (0.40 × M56) + (0.30 × D) + (0.20 × F) + (0.10 × R)</div>
+    <div class="notice">
+      <b>Nota metodológica:</b> el Índice de Prioridad se utiliza exclusivamente como criterio de selección logística y operativa de escuelas.
+      No debe interpretarse como indicador del consumo de frutas y verduras ni como medición nutricional de la población escolar.
+      <br><br>
+      <b>M56</b> = matrícula real de estudiantes de 5° y 6° grado.
+      <br>
+      El componente de rezago social contextual se mantiene en valor neutral provisional hasta validación definitiva por AGEB/CONEVAL.
     </div>
-    <div class="map-wrapper">
-        <div id="map"></div>
+  </div>
+</section>
+
+<section class="section">
+  <h2 class="section-title">Mapa y ranking preliminar</h2>
+  <div class="dashboard-grid">
+    <div id="map"></div>
+    <div class="method-box">
+      <h3 style="color:var(--uas-blue);margin-bottom:12px;">Escala de distancia</h3>
+      <p>≤3 km = 100 puntos</p>
+      <p>&gt;3–6 km = 90 puntos</p>
+      <p>&gt;6–9 km = 75 puntos</p>
+      <p>&gt;9–12 km = 60 puntos</p>
+      <p>&gt;12 km = 40 puntos</p>
+      <br>
+      <h3 style="color:var(--uas-blue);margin-bottom:12px;">Interpretación del IP</h3>
+      <p><span class="badge badge-high">≥80</span> Alta prioridad</p>
+      <p><span class="badge badge-mid">70–79</span> Prioridad moderada</p>
+      <p><span class="badge badge-low">&lt;70</span> Prioridad baja preliminar</p>
+      <br>
+      <p class="small">Las cuatro escuelas mejor posicionadas se muestran como candidatas preliminares para revisión. La asignación intervención/control se realizará después de la validación institucional.</p>
     </div>
-    <div class="info-panel">
-        <div class="legend">
-            <div class="legend-item"><div class="legend-color" style="background:#2b7a4b;"></div><span>Muy Bajo rezago (Estrato Alto)</span></div>
-            <div class="legend-item"><div class="legend-color" style="background:#a3d9a5;"></div><span>Bajo rezago (Estrato Medio-Alto)</span></div>
-            <div class="legend-item"><div class="legend-color" style="background:#ffd966;"></div><span>Medio rezago (Estrato Medio)</span></div>
-            <div class="legend-item"><div class="legend-color" style="background:#f4a261;"></div><span>Alto rezago (Estrato Medio-Bajo)</span></div>
-            <div class="legend-item"><div class="legend-color" style="background:#e76f51;"></div><span>Muy Alto rezago (Estrato Bajo)</span></div>
-            <div class="legend-item"><div class="legend-color" style="background:#c0c0c0;"></div><span>Zonas rurales / baja densidad</span></div>
-        </div>
+  </div>
+</section>
 
-        <div class="stats-grid">
-            <div class="stat-card"><h4>📉 Rezago Social (Sinaloa)</h4><div class="number">ALTO</div><div class="sub">Grado de rezago social (CONEVAL 2020)</div></div>
-            <div class="stat-card"><h4>🏫 Pobreza (Culiacán)</h4><div class="number">23.0%</div><div class="sub">Población en situación de pobreza</div></div>
-            <div class="stat-card"><h4>📊 Carencia alimentaria</h4><div class="number">17.3%</div><div class="sub">Acceso a alimentación nutritiva</div></div>
-            <div class="stat-card"><h4>🏠 Viviendas con piso tierra</h4><div class="number">2.3%</div><div class="sub">Indicador calidad vivienda</div></div>
-        </div>
+<section class="section">
+  <h2 class="section-title">Ranking recalculado con distancia real</h2>
+  <div class="table-wrapper">
+  <table id="rankingTable">
+    <thead>
+      <tr>
+        <th>Rank</th>
+        <th>DPR</th>
+        <th>Escuela</th>
+        <th>Sector</th>
+        <th>M56</th>
+        <th>Distancia</th>
+        <th>Puntaje D</th>
+        <th>Factibilidad</th>
+        <th>IP</th>
+        <th>Prioridad</th>
+      </tr>
+    </thead>
+    <tbody id="rankingBody"></tbody>
+  </table>
+  </div>
+</section>
 
-        <h3 style="margin-top: 20px;">🏫 Escuelas analizadas (estrato, zona y contraste)</h3>
-        <table class="school-table">
-            <thead>
-                <tr><th>Escuela</th><th>Tipo</th><th>Colonia / Zona</th><th>Estrato</th><th>Justificación / contraste</th></tr>
-            </thead>
-            <tbody>
-                <!-- Escuelas priorizadas (periferia - estrato bajo/medio-bajo) -->
-                <tr><td><strong>PROF. ALFREDO G. BASURTO</strong></td><td>Pública</td><td>Col. Miguel Hidalgo (Norte)</td><td><span class="estrato-medio-bajo">Medio-Bajo</span></td><td>AGEB con rezago alto; viviendas de calidad media-baja; zona de intervención prioritaria</td></tr>
-                <tr><td><strong>JUAN DE LA BARRERA</strong></td><td>Pública</td><td>Col. Lomas de Guadalupe (Este)</td><td><span class="estrato-bajo">Bajo</span></td><td>Alta marginación, menor acceso a servicios; ideal para grupo control</td></tr>
-                <tr><td><strong>SALVADOR ALVARADO</strong></td><td>Pública</td><td>Col. Alvarado (Sur)</td><td><span class="estrato-bajo">Bajo</span></td><td>Periferia sur, indicadores de pobreza superiores al promedio municipal</td></tr>
-                <tr><td><strong>GRAL. ANTONIO ROSALES</strong></td><td>Pública</td><td>Col. 3 Ríos (Noreste)</td><td><span class="estrato-medio-bajo">Medio-Bajo</span></td><td>Zona mixta, sectores con rezago medio; potencial para intervención</td></tr>
-                <!-- Escuelas de zona centro (estrato medio) -->
-                <tr><td><strong>BENITO JUÁREZ (Centro)</strong></td><td>Pública</td><td>Centro de Culiacán</td><td><span class="estrato-medio">Medio</span></td><td>Acceso a servicios completos, menor rezago; contraste con periferia</td></tr>
-                <tr><td><strong>AQUILES SERDÁN</strong></td><td>Pública</td><td>Centro de Culiacán</td><td><span class="estrato-medio">Medio</span></td><td>Zona comercial, infraestructura urbana consolidada</td></tr>
-                <tr><td><strong>JUSTO SIERRA (Centro)</strong></td><td>Pública</td><td>Centro de Culiacán</td><td><span class="estrato-medio">Medio</span></td><td>Cercanía a servicios públicos, población de ingreso medio</td></tr>
-                <!-- Escuelas privadas (estrato alto, pero algunas en zonas medias) -->
-                <tr><td><strong>COLEGIO SINALOA A.C.</strong></td><td>Privada</td><td>Col. Chapultepec (Norte)</td><td><span class="estrato-alto">Alto</span></td><td>Zona residencial de alto nivel socioeconómico</td></tr>
-                <tr><td><strong>INSTITUTO CHAPULTEPEC</strong></td><td>Privada</td><td>Col. Chapultepec (Norte)</td><td><span class="estrato-alto">Alto</span></td><td>Estrato alto, colegio privado de prestigio</td></tr>
-                <tr><td><strong>COLEGIO MONTFERRANT</strong></td><td>Privada</td><td>Col. Los Pinos (Norte)</td><td><span class="estrato-alto">Alto</span></td><td>Zona residencial de estrato alto</td></tr>
-                <tr><td><strong>COLEGIO RENACIMIENTO</strong></td><td>Privada</td><td>Col. 3 Ríos</td><td><span class="estrato-alto">Alto</span></td><td>Colegio privado en zona de estratos medios-altos</td></tr>
-            </tbody>
-        </table>
+<section class="section">
+  <h2 class="section-title">Candidatas preliminares para validación</h2>
+  <div class="top4" id="top4Cards"></div>
+</section>
 
-        <div class="method-note">
-            <strong>📌 Metodología de clasificación por estrato (CONEVAL + INEGI):</strong><br>
-            • El <strong>Índice de Rezago Social (IRS)</strong> del CONEVAL agrega: rezago educativo, acceso a salud, servicios básicos, calidad y espacios de la vivienda.<br>
-            • Sinaloa presenta grado de rezago <strong>ALTO</strong> a nivel estatal, con mejoras en los últimos 20 años.<br>
-            • A nivel <strong>AGEB</strong> (Área Geoestadística Básica), el CONEVAL clasifica en 5 grados: Muy bajo, Bajo, Medio, Alto y Muy alto rezago social.<br>
-            • Las colonias del <strong>norte, sur y este</strong> de Culiacán concentran los niveles más altos de rezago (estrato bajo/medio-bajo).<br>
-            • El <strong>centro y zonas residenciales</strong> tienen menor rezago (estrato medio/alto).<br>
-            • Las escuelas <strong>privadas</strong> se ubican predominantemente en estratos altos, pero algunas pueden estar en zonas medias; se incluyen para contraste.<br>
-            • <strong>Las áreas en gris</strong> corresponden a zonas rurales o de baja densidad poblacional sin AGEB urbana comparable.
-        </div>
+<section class="section">
+  <h2 class="section-title">Justificación para presentación</h2>
+  <div class="method-box">
+    La selección preliminar prioriza escuelas con alta matrícula real de estudiantes de 5° y 6° grado, distancia logística razonable respecto a la Facultad de Ciencias de la Nutrición y Gastronomía de la UAS y factibilidad operativa para completar las fases del protocolo. 
+    <br><br>
+    La factibilidad operativa integra condiciones prácticas de coordinación, accesibilidad institucional, turno y posibilidad de seguimiento. Aunque el acceso administrativo a ciertos sectores puede facilitar la implementación, el criterio se presenta como factibilidad operativa general para evitar interpretaciones de selección por influencia.
+  </div>
+</section>
 
-        <!-- Tabla de abreviaturas -->
-        <h3 style="margin-top: 25px;">📖 Glosario de abreviaturas y siglas</h3>
-        <table class="abbr-table">
-            <thead><tr><th>Abreviatura / Sigla</th><th>Significado</th><th>Institución / Referencia</th></tr></thead>
-            <tbody>
-                <tr><td><strong>CONEVAL</strong></td><td>Consejo Nacional de Evaluación de la Política de Desarrollo Social</td><td>Entidad gubernamental que mide la pobreza y rezago social en México</td></tr>
-                <tr><td><strong>INEGI</strong></td><td>Instituto Nacional de Estadística y Geografía</td><td>Fuente oficial de censos de población y vivienda</td></tr>
-                <tr><td><strong>IRS</strong></td><td>Índice de Rezago Social</td><td>Indicador CONEVAL que mide carencias en educación, salud, servicios, vivienda y activos</td></tr>
-                <tr><td><strong>AGEB</strong></td><td>Área Geoestadística Básica</td><td>Unidad territorial delimitada por INEGI para censos (urbana o rural)</td></tr>
-                <tr><td><strong>IRS CONEVAL</strong></td><td>Índice de Rezago Social CONEVAL</td><td>Clasifica en 5 grados: Muy bajo, Bajo, Medio, Alto, Muy alto</td></tr>
-                <tr><td><strong>Estrato Alto</strong></td><td>Nivel socioeconómico alto</td><td>Asociado a rezago Muy bajo o Bajo (CONEVAL)</td></tr>
-                <tr><td><strong>Estrato Medio-Alto</strong></td><td>Nivel socioeconómico medio-alto</td><td>Asociado a rezago Bajo</td></tr>
-                <tr><td><strong>Estrato Medio</strong></td><td>Nivel socioeconómico medio</td><td>Asociado a rezago Medio</td></tr>
-                <tr><td><strong>Estrato Medio-Bajo</strong></td><td>Nivel socioeconómico medio-bajo</td><td>Asociado a rezago Alto</td></tr>
-                <tr><td><strong>Estrato Bajo</strong></td><td>Nivel socioeconómico bajo</td><td>Asociado a rezago Muy alto</td></tr>
-            </tbody>
-        </table>
-    </div>
-    <footer>Fuentes: CONEVAL - Índice de Rezago Social 2020 · INEGI - Censo de Población y Vivienda 2020 · AGEB urbanas 2020</footer>
 </div>
 
+<footer>
+Sistema de Priorización de Escuelas · Versión preliminar para revisión con directora/comité tutorial
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
 <script>
-    // Coordenadas del centro de Culiacán
-    const centerLat = 24.8083;
-    const centerLng = -107.3945;
-    var map = L.map('map').setView([centerLat, centerLng], 12);
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; CartoDB'
-    }).addTo(map);
+const uas = {
+  nombre:"Facultad de Ciencias de la Nutrición y Gastronomía UAS",
+  lat:24.837810375829278,
+  lng:-107.40055781328304
+};
 
-    // ========== COBERTURA COMPLETA DEL POLÍGONO URBANO ==========
-    const urbanBoundary = [
-        [24.9100, -107.4900], [24.8900, -107.4400], [24.8600, -107.4200], [24.8500, -107.3800],
-        [24.8300, -107.3400], [24.8000, -107.3100], [24.7700, -107.3200], [24.7500, -107.3400],
-        [24.7300, -107.3700], [24.7200, -107.4000], [24.7300, -107.4400], [24.7500, -107.4700],
-        [24.7800, -107.4900], [24.8100, -107.5100], [24.8400, -107.5200], [24.8700, -107.5100],
-        [24.9000, -107.5000], [24.9100, -107.4900]
-    ];
+const escuelas = [
+  {
+    rank:1,dpr:"25DPR0638M",nombre:"General Ramón F. Iturbe",sector:12,m56:205,
+    distancia:11.1,lat:24.770642296057993,lng:-107.41865158227887,
+    dScore:60,fScore:100,rScore:60,ip:84.00
+  },
+  {
+    rank:2,dpr:"25DPR1351Q",nombre:"Lic. Adolfo López Mateos",sector:9,m56:177,
+    distancia:5.0,lat:24.805512683746,lng:-107.40933895186838,
+    dScore:90,fScore:80,rScore:60,ip:83.54
+  },
+  {
+    rank:3,dpr:"25DPR1008E",nombre:"Agustín Melgar",sector:12,m56:175,
+    distancia:7.8,lat:24.794461603742192,lng:-107.36237854450785,
+    dScore:75,fScore:100,rScore:60,ip:82.65
+  },
+  {
+    rank:4,dpr:"25DPR2052Z",nombre:"Independencia",sector:6,m56:179,
+    distancia:7.7,lat:24.827832376235072,lng:-107.44302749780954,
+    dScore:75,fScore:70,rScore:60,ip:77.43
+  },
+  {
+    rank:5,dpr:"25DPR0037T",nombre:"Jaime Nuño",sector:17,m56:180,
+    distancia:11.2,lat:24.77508443193519,lng:-107.45143890528024,
+    dScore:60,fScore:60,rScore:60,ip:71.12
+  },
+  {
+    rank:6,dpr:"25DPR1953I",nombre:"Renato Vega Amador",sector:12,m56:167,
+    distancia:14.2,lat:24.753721846666117,lng:-107.43401393567994,
+    dScore:40,fScore:100,rScore:60,ip:70.59
+  },
+  {
+    rank:7,dpr:"25DPR0904T",nombre:"Lázaro Cárdenas",sector:6,m56:171,
+    distancia:10.4,lat:24.775325728657187,lng:-107.37395030037256,
+    dScore:60,fScore:60,rScore:60,ip:69.37
+  },
+  {
+    rank:8,dpr:"25DPR2045P",nombre:"Miguel D. Crisantes Gatzionis",sector:17,m56:201,
+    distancia:13.4,lat:24.758491497524933,lng:-107.46089563011083,
+    dScore:40,fScore:50,rScore:60,ip:67.22
+  },
+  {
+    rank:9,dpr:"25DPR0584Z",nombre:"Dionisio Saldaña López",sector:6,m56:171,
+    distancia:12.1,lat:24.761315209550943,lng:-107.37204692768432,
+    dScore:40,fScore:50,rScore:60,ip:61.37
+  },
+  {
+    rank:10,dpr:"25DPR2033K",nombre:"Joaquín Alejandro Castro Rivera",sector:16,m56:168,
+    distancia:12.2,lat:24.759341409522627,lng:-107.41148471980443,
+    dScore:40,fScore:50,rScore:60,ip:60.78
+  }
+];
 
-    // Zonas con diferentes niveles de rezago (distribución real basada en CONEVAL)
-    const southZone = [[24.7800, -107.4200], [24.7800, -107.3700], [24.8000, -107.3700], [24.8000, -107.4200], [24.7800, -107.4200]];
-    const northZone = [[24.8400, -107.4400], [24.8400, -107.3900], [24.8150, -107.3900], [24.8150, -107.4400], [24.8400, -107.4400]];
-    const eastZone = [[24.8050, -107.3550], [24.8050, -107.3300], [24.8250, -107.3300], [24.8250, -107.3550], [24.8050, -107.3550]];
-    const centerZone = [[24.8000, -107.4050], [24.8000, -107.3800], [24.8200, -107.3800], [24.8200, -107.4050], [24.8000, -107.4050]];
-    const westZone = [[24.7700, -107.4600], [24.7700, -107.4200], [24.8000, -107.4200], [24.8000, -107.4600], [24.7700, -107.4600]];
-    const northeastResZone = [[24.8250, -107.3850], [24.8250, -107.3600], [24.8450, -107.3600], [24.8450, -107.3850], [24.8250, -107.3850]];
-    const industrialZone = [[24.7550, -107.3800], [24.7550, -107.3400], [24.7800, -107.3400], [24.7800, -107.3800], [24.7550, -107.3800]];
+function priorityBadge(ip){
+  if(ip >= 80) return '<span class="badge badge-high">Alta</span>';
+  if(ip >= 70) return '<span class="badge badge-mid">Moderada</span>';
+  return '<span class="badge badge-low">Baja preliminar</span>';
+}
 
-    const colorsMap = {
-        'Muy alto': '#e76f51', 'Alto': '#f4a261', 'Medio': '#ffd966', 'Bajo': '#a3d9a5', 'Muy bajo': '#2b7a4b'
-    };
+const rankingBody = document.getElementById("rankingBody");
+escuelas.forEach(e=>{
+  const tr = document.createElement("tr");
+  if(e.rank <= 3) tr.classList.add("rank-1");
+  else if(e.rank === 4) tr.classList.add("rank-2");
 
-    L.polygon(urbanBoundary, { color: '#c0c0c0', weight: 1, fillColor: '#e0e0e0', fillOpacity: 0.4 }).addTo(map).bindPopup('Zona urbana · Periferia de Culiacán');
-    L.polygon(southZone, { color: colorsMap['Muy alto'], weight: 1.5, fillColor: colorsMap['Muy alto'], fillOpacity: 0.6 }).addTo(map).bindPopup('<b>Zona Sur</b><br>Grado: MUY ALTO rezago<br>Estrato: BAJO');
-    L.polygon(northZone, { color: colorsMap['Alto'], weight: 1.5, fillColor: colorsMap['Alto'], fillOpacity: 0.6 }).addTo(map).bindPopup('<b>Zona Norte</b><br>Grado: ALTO rezago<br>Estrato: MEDIO-BAJO');
-    L.polygon(eastZone, { color: colorsMap['Alto'], weight: 1.5, fillColor: colorsMap['Alto'], fillOpacity: 0.6 }).addTo(map).bindPopup('<b>Zona Este</b><br>Grado: ALTO rezago<br>Estrato: MEDIO-BAJO');
-    L.polygon(centerZone, { color: colorsMap['Medio'], weight: 1.5, fillColor: colorsMap['Medio'], fillOpacity: 0.6 }).addTo(map).bindPopup('<b>Zona Centro</b><br>Grado: MEDIO rezago<br>Estrato: MEDIO');
-    L.polygon(westZone, { color: colorsMap['Bajo'], weight: 1.5, fillColor: colorsMap['Bajo'], fillOpacity: 0.6 }).addTo(map).bindPopup('<b>Zona Oeste</b><br>Grado: BAJO rezago<br>Estrato: MEDIO-ALTO');
-    L.polygon(northeastResZone, { color: colorsMap['Muy bajo'], weight: 1.5, fillColor: colorsMap['Muy bajo'], fillOpacity: 0.6 }).addTo(map).bindPopup('<b>Zona Noreste (Chapultepec)</b><br>Grado: MUY BAJO rezago<br>Estrato: ALTO');
-    L.polygon(industrialZone, { color: colorsMap['Medio'], weight: 1.5, fillColor: colorsMap['Medio'], fillOpacity: 0.6 }).addTo(map).bindPopup('<b>Zona Industrial</b><br>Grado: MEDIO rezago<br>Estrato: MEDIO');
+  tr.innerHTML = `
+    <td>${e.rank}</td>
+    <td>${e.dpr}</td>
+    <td><b>${e.nombre}</b></td>
+    <td>${e.sector}</td>
+    <td>${e.m56}</td>
+    <td>${e.distancia.toFixed(1)} km</td>
+    <td>${e.dScore}</td>
+    <td>${e.fScore}</td>
+    <td><b>${e.ip.toFixed(2)}</b></td>
+    <td>${priorityBadge(e.ip)}</td>
+  `;
+  rankingBody.appendChild(tr);
+});
 
-    // ========== ICONO DE ESCUELAS ==========
-    const schoolIcon = L.divIcon({ html: '<div style="background:#1e4663; width:26px; height:26px; border-radius:6px; display:flex; align-items:center; justify-content:center; border:1px solid white;"><span style="color:white; font-size:13px;">🏫</span></div>', iconSize: [26,26] });
-    const privIcon = L.divIcon({ html: '<div style="background:#6b21a5; width:26px; height:26px; border-radius:6px; display:flex; align-items:center; justify-content:center; border:1px solid white;"><span style="color:white; font-size:13px;">🏛️</span></div>', iconSize: [26,26] });
+const top4 = escuelas.slice(0,4);
+const top4Cards = document.getElementById("top4Cards");
+top4.forEach(e=>{
+  const div = document.createElement("div");
+  div.className = "school-card";
+  div.innerHTML = `
+    <h3>${e.rank}. ${e.nombre}</h3>
+    <p><b>DPR:</b> ${e.dpr}</p>
+    <p><b>M56:</b> ${e.m56}</p>
+    <p><b>Distancia UAS:</b> ${e.distancia.toFixed(1)} km</p>
+    <p><b>IP:</b> ${e.ip.toFixed(2)}</p>
+    <p class="small">Candidata preliminar para validación institucional.</p>
+  `;
+  top4Cards.appendChild(div);
+});
 
-    // ========== TODAS LAS ESCUELAS CON DATOS HOMOGÉNEOS ==========
-    const schools = [
-        { name: "PROF. ALFREDO G. BASURTO", type: "Pública", lat: 24.8285, lng: -107.4012, estrato: "Medio-Bajo", zona: "Norte", domicilio: "Col. Miguel Hidalgo" },
-        { name: "JUAN DE LA BARRERA", type: "Pública", lat: 24.8010, lng: -107.3590, estrato: "Bajo", zona: "Este", domicilio: "Col. Lomas de Guadalupe" },
-        { name: "SALVADOR ALVARADO", type: "Pública", lat: 24.7805, lng: -107.3860, estrato: "Bajo", zona: "Sur", domicilio: "Col. Alvarado" },
-        { name: "GRAL. ANTONIO ROSALES", type: "Pública", lat: 24.8200, lng: -107.3730, estrato: "Medio-Bajo", zona: "Noreste", domicilio: "Col. 3 Ríos" },
-        { name: "BENITO JUÁREZ (Centro)", type: "Pública", lat: 24.8125, lng: -107.3910, estrato: "Medio", zona: "Centro", domicilio: "Centro de Culiacán" },
-        { name: "AQUILES SERDÁN", type: "Pública", lat: 24.8070, lng: -107.3890, estrato: "Medio", zona: "Centro", domicilio: "Centro de Culiacán" },
-        { name: "JUSTO SIERRA (Centro)", type: "Pública", lat: 24.8110, lng: -107.3965, estrato: "Medio", zona: "Centro", domicilio: "Centro de Culiacán" },
-        { name: "COLEGIO SINALOA A.C.", type: "Privada", lat: 24.8180, lng: -107.4050, estrato: "Alto", zona: "Noreste", domicilio: "Col. Chapultepec" },
-        { name: "INSTITUTO CHAPULTEPEC", type: "Privada", lat: 24.8220, lng: -107.4090, estrato: "Alto", zona: "Noreste", domicilio: "Col. Chapultepec" },
-        { name: "COLEGIO MONTFERRANT", type: "Privada", lat: 24.8100, lng: -107.3620, estrato: "Alto", zona: "Noreste", domicilio: "Col. Los Pinos" },
-        { name: "COLEGIO RENACIMIENTO", type: "Privada", lat: 24.8260, lng: -107.3690, estrato: "Alto", zona: "Noreste", domicilio: "Col. 3 Ríos" }
-    ];
+const map = L.map("map").setView([24.795, -107.415], 12);
 
-    schools.forEach(s => {
-        const icon = s.type === "Privada" ? privIcon : schoolIcon;
-        L.marker([s.lat, s.lng], { icon: icon }).addTo(map)
-            .bindPopup(`<b>${s.name}</b><br>🏛️ Tipo: ${s.type}<br>📍 Zona: ${s.zona}<br>💰 Estrato: ${s.estrato}<br>📌 Domicilio: ${s.domicilio}<br>📊 Basado en rezago CONEVAL 2020`);
-    });
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution:"© OpenStreetMap"
+}).addTo(map);
 
-    map.fitBounds(L.latLngBounds([[24.710, -107.530], [24.920, -107.300]]));
+const uasIcon = L.divIcon({
+  html:'<div style="background:#C62828;color:white;border:3px solid white;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.35)">U</div>',
+  iconSize:[34,34],
+  className:""
+});
+
+L.marker([uas.lat, uas.lng], {icon:uasIcon})
+  .addTo(map)
+  .bindPopup(`<b>${uas.nombre}</b><br>Punto logístico de referencia`);
+
+const schoolIcon = (rank)=>L.divIcon({
+  html:`<div style="background:${rank<=4?'#D4A017':'#005B96'};color:white;border:2px solid white;border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-weight:800;box-shadow:0 2px 8px rgba(0,0,0,.35)">${rank}</div>`,
+  iconSize:[30,30],
+  className:""
+});
+
+const bounds = [[uas.lat, uas.lng]];
+
+escuelas.forEach(e=>{
+  bounds.push([e.lat,e.lng]);
+  L.marker([e.lat,e.lng], {icon:schoolIcon(e.rank)})
+    .addTo(map)
+    .bindPopup(`
+      <b>${e.rank}. ${e.nombre}</b><br>
+      <b>DPR:</b> ${e.dpr}<br>
+      <b>M56:</b> ${e.m56}<br>
+      <b>Sector:</b> ${e.sector}<br>
+      <b>Distancia UAS:</b> ${e.distancia.toFixed(1)} km<br>
+      <b>IP:</b> ${e.ip.toFixed(2)}
+    `);
+});
+
+map.fitBounds(bounds, {padding:[40,40]});
+
+const legend = L.control({position:"bottomright"});
+legend.onAdd = function(){
+  const div = L.DomUtil.create("div");
+  div.style.background = "white";
+  div.style.padding = "12px";
+  div.style.borderRadius = "12px";
+  div.style.boxShadow = "0 2px 12px rgba(0,0,0,.25)";
+  div.style.fontSize = "13px";
+  div.innerHTML = `
+    <b>Leyenda</b><br>
+    <span style="color:#C62828">●</span> UAS<br>
+    <span style="color:#D4A017">●</span> Top 4 candidatas<br>
+    <span style="color:#005B96">●</span> Top 10 preliminar
+  `;
+  return div;
+};
+legend.addTo(map);
 </script>
+
 </body>
 </html>
